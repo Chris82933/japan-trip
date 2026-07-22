@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hokkaido Powder Loop — 7-Day Route</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root{
+    --ink:#0F1A2E;
+    --ink-2:#182742;
+    --snow:#F5F7FB;
+    --paper:#FFFFFF;
+    --line:#DCE2EC;
+    --line-soft:#EAEDF4;
+    --ice:#3E8FB0;
+    --ice-light:#7EC8E3;
+    --ember:#D97B2E;
+    --ember-light:#F0B36B;
+    --pine:#33604F;
+    --pine-light:#5B9A82;
+    --text:#16213A;
+    --text-soft:#5A6579;
+    --text-inv:#EAF0F8;
+    --text-inv-soft:#9FB0C9;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--snow);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Big Shoulders Display',sans-serif;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:0.01em;
+    margin:0;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(126,200,227,0.16), transparent 55%),
+      radial-gradient(ellipse at 90% 10%, rgba(217,123,46,0.14), transparent 45%),
+      var(--ink);
+    color:var(--text-inv);
+    padding:64px 24px 40px;
+    position:relative;
+    overflow:hidden;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .hero-inner{max-width:1180px;margin:0 auto;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--ice-light);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px;height:1px;
+    background:var(--ice-light);
+    display:inline-block;
+  }
+  .hero h1{
+    font-size:clamp(42px,8vw,88px);
+    line-height:0.94;
+    color:#fff;
+  }
+  .hero h1 span{color:var(--ice-light);}
+  .route-line{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:clamp(12px,1.6vw,15px);
+    color:var(--text-inv-soft);
+    margin-top:18px;
+    letter-spacing:0.02em;
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    align-items:center;
+  }
+  .route-line b{color:#fff;font-weight:500;}
+  .route-line .arrow{color:var(--ember-light);}
+
+  .stat-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0;
+    margin-top:36px;
+    border-top:1px solid rgba(255,255,255,0.15);
+  }
+  .stat-stub{
+    flex:1 1 140px;
+    padding:16px 18px 14px;
+    border-right:1px dashed rgba(255,255,255,0.2);
+    position:relative;
+  }
+  .stat-stub:last-child{border-right:none;}
+  .stat-num{
+    font-family:'Big Shoulders Display',sans-serif;
+    font-weight:700;
+    font-size:34px;
+    color:#fff;
+    line-height:1;
+  }
+  .stat-num em{font-style:normal;color:var(--ice-light);}
+  .stat-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--text-inv-soft);
+    margin-top:6px;
+  }
+
+  /* ---------- MAIN LAYOUT ---------- */
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  section{padding:44px 0;}
+  .section-head{margin-bottom:22px;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;}
+  .section-head h2{font-size:clamp(26px,3.4vw,36px);color:var(--ink);}
+  .section-sub{font-size:13.5px;color:var(--text-soft);max-width:520px;line-height:1.5;}
+
+  /* ---------- DAY TICKET NAV ---------- */
+  .ticket-nav{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    padding-bottom:10px;
+    margin-bottom:22px;
+    scrollbar-width:thin;
+  }
+  .ticket{
+    flex:0 0 auto;
+    width:92px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-top:5px solid var(--ticket-color,var(--ice));
+    padding:10px 10px 12px;
+    cursor:pointer;
+    position:relative;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .ticket::before{
+    content:"";
+    position:absolute;
+    left:-1px;top:50%;
+    width:8px;height:8px;
+    background:var(--snow);
+    border:1px solid var(--line);
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+  }
+  .ticket:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(15,26,46,0.1);}
+  .ticket.active{
+    background:var(--ticket-color,var(--ice));
+    border-color:var(--ticket-color,var(--ice));
+  }
+  .ticket-day{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    letter-spacing:0.08em;
+    color:var(--text-soft);
+    text-transform:uppercase;
+  }
+  .ticket.active .ticket-day{color:rgba(255,255,255,0.85);}
+  .ticket-num{
+    font-family:'Big Shoulders Display',sans-serif;
+    font-weight:800;
+    font-size:30px;
+    line-height:1.1;
+    color:var(--ink);
+    margin-top:2px;
+  }
+  .ticket.active .ticket-num{color:#fff;}
+  .ticket-tag{
+    font-size:10.5px;
+    color:var(--text-soft);
+    margin-top:4px;
+    line-height:1.3;
+    min-height:26px;
+  }
+  .ticket.active .ticket-tag{color:rgba(255,255,255,0.9);}
+  .ticket-reset{
+    flex:0 0 auto;
+    width:92px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    color:var(--text-soft);
+    border:1px dashed var(--line);
+    background:transparent;
+    cursor:pointer;
+  }
+  .ticket-reset:hover{border-color:var(--ice);color:var(--ice);}
+
+  /* ---------- MAP + DETAIL ---------- */
+  .map-grid{
+    display:grid;
+    grid-template-columns:1.5fr 1fr;
+    gap:0;
+    border:1px solid var(--line);
+    background:var(--paper);
+  }
+  #map{height:560px;width:100%;}
+  .detail-panel{
+    border-left:1px solid var(--line);
+    padding:24px;
+    display:flex;
+    flex-direction:column;
+    max-height:560px;
+    overflow-y:auto;
+  }
+  .detail-eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ice);
+    margin-bottom:6px;
+  }
+  .detail-panel h3{font-size:26px;color:var(--ink);margin-bottom:8px;}
+  .detail-narrative{font-size:13.5px;color:var(--text-soft);line-height:1.55;margin-bottom:20px;}
+  .stop-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line-soft);}
+  .stop{
+    display:flex;
+    gap:12px;
+    padding:14px 0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .stop-icon{
+    flex:0 0 30px;
+    width:30px;height:30px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;
+    background:var(--stop-color,var(--ice));
+    margin-top:2px;
+  }
+  .stop-icon svg{width:15px;height:15px;}
+  .stop-body{flex:1;}
+  .stop-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline;}
+  .stop-name{font-weight:600;font-size:14.5px;color:var(--ink);}
+  .stop-time{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--text-soft);white-space:nowrap;}
+  .stop-note{font-size:12.5px;color:var(--text-soft);margin-top:3px;line-height:1.45;}
+  .drive-chip{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--text-soft);
+    padding:8px 0;
+    margin-left:42px;
+  }
+  .drive-chip svg{width:12px;height:12px;flex:0 0 auto;}
+
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+    padding:14px 24px;
+    border-top:1px solid var(--line);
+    background:var(--snow);
+    font-size:11.5px;
+    color:var(--text-soft);
+  }
+  .legend-item{display:flex;align-items:center;gap:7px;}
+  .legend-dot{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;}
+  .legend-dot svg{width:9px;height:9px;}
+
+  /* ---------- ROUTE SHEET ---------- */
+  .sheet{border:1px solid var(--line);background:var(--paper);}
+  .sheet-row{
+    display:grid;
+    grid-template-columns:70px 1.1fr 1.6fr 0.9fr;
+    gap:16px;
+    padding:16px 20px;
+    border-bottom:1px solid var(--line-soft);
+    align-items:center;
+  }
+  .sheet-row.head{
+    background:var(--ink);
+    color:var(--text-inv-soft);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    padding:12px 20px;
+  }
+  .sheet-row:last-child{border-bottom:none;}
+  .sheet-day{
+    font-family:'Big Shoulders Display',sans-serif;
+    font-weight:800;
+    font-size:26px;
+    color:var(--sheet-color,var(--ink));
+  }
+  .sheet-title{font-weight:600;font-size:14px;color:var(--ink);}
+  .sheet-title small{display:block;font-weight:400;color:var(--text-soft);font-size:11.5px;margin-top:2px;}
+  .sheet-stops{font-size:12.5px;color:var(--text-soft);line-height:1.5;}
+  .sheet-drive{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--text-soft);}
+
+  /* ---------- NOTES FOOTER ---------- */
+  footer{
+    background:var(--ink);
+    color:var(--text-inv-soft);
+    padding:40px 0 34px;
+    margin-top:20px;
+  }
+  .notes-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:28px;
+  }
+  .note h4{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ice-light);
+    margin-bottom:8px;
+  }
+  .note p{font-size:13px;line-height:1.6;color:var(--text-inv-soft);margin:0;}
+  .foot-bottom{
+    margin-top:32px;
+    padding-top:18px;
+    border-top:1px solid rgba(255,255,255,0.12);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    color:rgba(255,255,255,0.35);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:860px){
+    .map-grid{grid-template-columns:1fr;}
+    #map{height:360px;}
+    .detail-panel{max-height:none;border-left:none;border-top:1px solid var(--line);}
+    .sheet-row{grid-template-columns:1fr;gap:6px;}
+    .sheet-row.head{display:none;}
+    .sheet-day{font-size:20px;}
+    .notes-grid{grid-template-columns:1fr;}
+    .stat-stub{flex:1 1 45%;}
+  }
+
+  .leaflet-popup-content-wrapper{border-radius:0;font-family:'Inter',sans-serif;}
+  .leaflet-popup-content{margin:12px 14px;font-size:12.5px;}
+  .leaflet-popup-content b{font-family:'Big Shoulders Display',sans-serif;font-size:15px;text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Hokkaido · Japan — Winter Route</div>
+    <h1>7-Day Powder<br>Loop<span>.</span></h1>
+    <div class="route-line">
+      <b>Chitose</b><span class="arrow">›</span><b>Otaru</b><span class="arrow">›</span><b>Kiroro</b><span class="arrow">›</span><b>Niseko</b><span class="arrow">›</span><b>Rusutsu</b><span class="arrow">›</span><b>Chitose</b>
+    </div>
+    <div class="stat-row">
+      <div class="stat-stub"><div class="stat-num">7</div><div class="stat-label">Days total</div></div>
+      <div class="stat-stub"><div class="stat-num"><em>5</em></div><div class="stat-label">Riding days</div></div>
+      <div class="stat-stub"><div class="stat-num">4<span class="mono" style="font-size:16px;">+cat</span></div><div class="stat-label">Resorts / zones</div></div>
+      <div class="stat-stub"><div class="stat-num">~5<span class="mono" style="font-size:16px;">h</span></div><div class="stat-label">Total driving</div></div>
+      <div class="stat-stub"><div class="stat-num">4<span class="mono" style="font-size:16px;">nt</span></div><div class="stat-label">Private onsen</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="map-section">
+    <div class="section-head">
+      <div>
+        <h2>Route &amp; Itinerary</h2>
+        <div class="section-sub">Tap a day to see that leg on the map, or view the full loop. All drive legs are estimates under 1.5 hrs, except the airport transfers on day 1 &amp; 7.</div>
+      </div>
+    </div>
+
+    <div class="ticket-nav" id="ticketNav"></div>
+
+    <div class="map-grid">
+      <div id="map"></div>
+      <div class="detail-panel" id="detailPanel"></div>
+    </div>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background:var(--ice)">&#9650;</span> Ride</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--ember)">&#9679;</span> Stay / onsen</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--pine)">&#9670;</span> Eat</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--text-soft)">&#9992;</span> Transit</span>
+    </div>
+  </section>
+
+  <section id="sheet-section">
+    <div class="section-head">
+      <div>
+        <h2>Full Route Sheet</h2>
+        <div class="section-sub">Every day at a glance — for screenshotting or forwarding to the group chat.</div>
+      </div>
+    </div>
+    <div class="sheet" id="sheet">
+      <div class="sheet-row head">
+        <div>Day</div><div>Focus</div><div>Stops</div><div>Drive</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="notes-grid">
+      <div class="note">
+        <h4>Vehicle</h4>
+        <p>4WD van/SUV, not a true camper — you're staying in real beds each night. Get quotes from Peak Niseko Car Rental, plus a couple of local winter-van outfits to compare.</p>
+      </div>
+      <div class="note">
+        <h4>Cat skiing</h4>
+        <p>Chisenupuri (Hokkaido Backcountry Club) is unguided and the most affordable option for a group of 4. Book ahead — weather-dependent, keep the day flexible.</p>
+      </div>
+      <div class="note">
+        <h4>Lift tickets</h4>
+        <p>Kiroro, Moiwa, and Rusutsu each run separate passes from Niseko United — buy day-by-day rather than a single multi-day pass.</p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>Hokkaido Powder Loop — planning reference, not a booking confirmation</span>
+      <span>Map data © OpenStreetMap contributors, © CARTO</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+/* ============ DATA ============ */
+const DAY_COLORS = ["#3E8FB0","#33604F","#7EC8E3","#D97B2E","#245A78","#F0B36B","#1F3E33"];
+
+const ICONS = {
+  ride: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20 L10 7 L14 14 L17 9 L21 20 Z"/></svg>',
+  stay: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18c1.5-2 2.5-3 4-3s2.5 1 4 1 2.5-1 4-1 2.5 1 4 3"/><path d="M4 13c1.5-2 2.5-3 4-3s2.5 1 4 1 2.5-1 4-1 2.5 1 4 3"/></svg>',
+  eat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v7a2 2 0 0 0 4 0V3M9 10v11M17 3c-1.5 0-3 1.5-3 4s1.5 4 3 4v10"/></svg>',
+  transit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16l20-7-7 20-3-8-8-3-2-2z"/></svg>'
+};
+
+const TYPE_COLOR = { ride:'var(--ice)', stay:'var(--ember)', eat:'var(--pine)', transit:'var(--text-soft)' };
+
+const trip = [
+  {
+    day:1, tag:"Otaru", title:"Arrival & Otaru",
+    narrative:"Land, pick up the van, and ease in with a coastal evening in Otaru before the mountains start.",
+    drive:"Chitose Airport → Otaru, ~75 min",
+    stops:[
+      {name:"New Chitose Airport", type:"transit", time:"Midday", note:"Pick up 4WD van/SUV.", lat:42.7791317, lng:141.6866364},
+      {name:"Otaru Canal", type:"ride", time:"Late afternoon", note:"Stroll the gas-lit canal and stone warehouses.", lat:43.199041, lng:141.0021176},
+      {name:"Otaru Tatsumi Sushi", type:"eat", time:"Dinner", note:"Well-rated local sushi counter near the canal.", lat:43.1949404, lng:141.0055246}
+    ]
+  },
+  {
+    day:2, tag:"Kiroro", title:"Kiroro",
+    narrative:"First riding day — two mountains, sanctioned tree skiing, and some of Hokkaido's deepest snowfall.",
+    drive:"Otaru → Kiroro, ~40 min",
+    stops:[
+      {name:"Kiroro Resort", type:"ride", time:"Full day", note:"Small, uncrowded, deep snow — locals' favorite over Niseko.", lat:43.0677043, lng:140.9895954},
+      {name:"Yu Kiroro", type:"stay", time:"Overnight", note:"Slopeside condo-hotel with onsen access; kitchen in-room.", lat:43.0746056, lng:140.9853285}
+    ]
+  },
+  {
+    day:3, tag:"Moiwa", title:"Niseko Moiwa + Check-in",
+    narrative:"The 'locals' mountain' next door to the famous Niseko resorts, then settle into the onsen base for four nights.",
+    drive:"Kiroro → Niseko, ~55 min",
+    stops:[
+      {name:"Niseko Moiwa Ski Resort", type:"ride", time:"Full day", note:"Only 3 lifts, no lift lines, same Niseko powder.", lat:42.8482023, lng:140.6303168},
+      {name:"Hotel Kanronomori", type:"stay", time:"Check-in", note:"Kashikiri (private, reservable) onsen bath big enough for 4, plus a public bath. Base for nights 3–6.", lat:42.8468409, lng:140.6230545},
+      {name:"Tozanken Ramen", type:"eat", time:"Dinner", note:"No-reservation local favorite in Hirafu — go early.", lat:42.8599397, lng:140.7027646}
+    ]
+  },
+  {
+    day:4, tag:"Cat ski", title:"Cat Skiing — Chisenupuri",
+    narrative:"Backcountry powder day at the old Chisenupuri ski area, now cat-ski only. Unguided, small groups, onsen right at the base.",
+    drive:"Kanronomori → Chisenupuri, ~18 min",
+    stops:[
+      {name:"Chisenupuri CAT Ski", type:"ride", time:"Full day", note:"Unguided snowcat access — the affordable cat-ski option for a group of 4.", lat:42.8689792, lng:140.5951178},
+      {name:"Hotel Kanronomori", type:"stay", time:"Evening", note:"Private onsen soak to end the day.", lat:42.8468409, lng:140.6230545}
+    ]
+  },
+  {
+    day:5, tag:"Niseko", title:"Niseko United",
+    narrative:"The one big-name resort day — Grand Hirafu and the connected Niseko United terrain.",
+    drive:"No drive — based in Niseko",
+    stops:[
+      {name:"Niseko Tokyu Grand Hirafu", type:"ride", time:"Full day", note:"Go on a weekday if possible to dodge the busiest crowds.", lat:42.8616549, lng:140.6982419},
+      {name:"KAMIMURA", type:"eat", time:"Dinner", note:"Well-regarded tasting-menu restaurant — good pick for a night out.", lat:42.8600708, lng:140.7058394}
+    ]
+  },
+  {
+    day:6, tag:"Rest", title:"Onsen Rest Day",
+    narrative:"No skiing. A full day at the ryokan and around Hirafu/Kutchan — sleep in, soak, wander, Mt. Yotei views.",
+    drive:"No drive — rest day",
+    stops:[
+      {name:"Hotel Kanronomori", type:"stay", time:"All day", note:"Private onsen, town wandering, café time.", lat:42.8468409, lng:140.6230545}
+    ]
+  },
+  {
+    day:7, tag:"Rusutsu", title:"Rusutsu & Departure",
+    narrative:"Second popular resort for the morning, then the drive back to the airport.",
+    drive:"Niseko → Rusutsu ~40 min · Rusutsu → Chitose ~80 min",
+    stops:[
+      {name:"Rusutsu Resort Hotel & Convention", type:"ride", time:"Morning / early PM", note:"Three mountains, good tree skiing, less crowded than Niseko.", lat:42.7528908, lng:140.9023717},
+      {name:"New Chitose Airport", type:"transit", time:"Evening", note:"Drop off the van and depart.", lat:42.7791317, lng:141.6866364}
+    ]
+  }
+];
+
+/* ============ MAP INIT ============ */
+const map = L.map('map', { scrollWheelZoom:false }).setView([42.95,140.85], 9);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution:'&copy; OpenStreetMap contributors &copy; CARTO',
+  subdomains:'abcd', maxZoom:19
+}).addTo(map);
+
+let layerGroup = L.layerGroup().addTo(map);
+let activeDay = null;
+
+function makeIcon(type, color, dimmed){
+  return L.divIcon({
+    className:'',
+    html:`<div style="width:28px;height:28px;border-radius:50%;background:${color};opacity:${dimmed?0.35:1};display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(15,26,46,0.35);color:#fff;border:2px solid #fff;">
+            <div style="width:14px;height:14px;">${ICONS[type]}</div>
+          </div>`,
+    iconSize:[28,28], iconAnchor:[14,14], popupAnchor:[0,-14]
+  });
+}
+
+function allPoints(){
+  const pts = [];
+  trip.forEach(d => d.stops.forEach(s => pts.push([s.lat,s.lng])));
+  return pts;
+}
+
+function renderMap(dayNum){
+  layerGroup.clearLayers();
+
+  trip.forEach(d => {
+    const isActive = dayNum === null || d.day === dayNum;
+    const color = DAY_COLORS[d.day-1];
+    const latlngs = d.stops.map(s => [s.lat,s.lng]);
+
+    if(latlngs.length > 1){
+      L.polyline(latlngs, {
+        color: color,
+        weight: dayNum === null ? 2.5 : (isActive ? 4 : 1.5),
+        opacity: dayNum === null ? 0.75 : (isActive ? 0.95 : 0.15),
+        dashArray: isActive ? null : '2,6'
+      }).addTo(layerGroup);
+    }
+
+    d.stops.forEach(s => {
+      const marker = L.marker([s.lat,s.lng], { icon: makeIcon(s.type, color, !isActive && dayNum !== null) });
+      marker.bindPopup(`<b>${s.name}</b><br>Day ${d.day} · ${s.time}<br>${s.note}`);
+      marker.addTo(layerGroup);
+    });
+  });
+
+  // connect days in order for the full-trip view
+  if(dayNum === null){
+    const lastFirst = [];
+    trip.forEach(d => { lastFirst.push([d.stops[0].lat, d.stops[0].lng]); });
+    L.polyline(lastFirst, { color:'#9FB0C9', weight:1, opacity:0.5, dashArray:'1,7' }).addTo(layerGroup);
+  }
+
+  if(dayNum === null){
+    map.fitBounds(allPoints(), { padding:[30,30] });
+  } else {
+    const d = trip.find(x => x.day === dayNum);
+    map.fitBounds(d.stops.map(s => [s.lat,s.lng]), { padding:[60,60], maxZoom:12 });
+  }
+}
+
+/* ============ DETAIL PANEL ============ */
+function renderDetail(dayNum){
+  const panel = document.getElementById('detailPanel');
+  if(dayNum === null){
+    panel.innerHTML = `
+      <div class="detail-eyebrow">Full loop</div>
+      <h3>All 7 Days</h3>
+      <div class="detail-narrative">A driving loop from New Chitose Airport through Otaru, Kiroro, and Niseko (Moiwa, Chisenupuri cat-ski, Niseko United), finishing at Rusutsu. Tap any ticket above to zoom into that day's stops and drive time.</div>
+    `;
+    return;
+  }
+  const d = trip.find(x => x.day === dayNum);
+  const color = DAY_COLORS[d.day-1];
+  let stopsHtml = `<div class="drive-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M14 6l6 6-6 6"/></svg>${d.drive}</div>`;
+  d.stops.forEach(s => {
+    stopsHtml += `
+      <li class="stop">
+        <div class="stop-icon" style="background:${color}">${ICONS[s.type]}</div>
+        <div class="stop-body">
+          <div class="stop-top"><span class="stop-name">${s.name}</span><span class="stop-time">${s.time}</span></div>
+          <div class="stop-note">${s.note}</div>
+        </div>
+      </li>`;
+  });
+  panel.innerHTML = `
+    <div class="detail-eyebrow">Day 0${d.day}</div>
+    <h3>${d.title}</h3>
+    <div class="detail-narrative">${d.narrative}</div>
+    <ul class="stop-list">${stopsHtml}</ul>
+  `;
+}
+
+/* ============ TICKET NAV ============ */
+function renderNav(){
+  const nav = document.getElementById('ticketNav');
+  let html = '';
+  trip.forEach(d => {
+    html += `
+      <div class="ticket" data-day="${d.day}" style="--ticket-color:${DAY_COLORS[d.day-1]}">
+        <div class="ticket-day">Day 0${d.day}</div>
+        <div class="ticket-num">${String(d.day).padStart(2,'0')}</div>
+        <div class="ticket-tag">${d.tag}</div>
+      </div>`;
+  });
+  html += `<div class="ticket-reset" id="resetBtn">Full<br>Loop</div>`;
+  nav.innerHTML = html;
+
+  nav.querySelectorAll('.ticket').forEach(t => {
+    t.addEventListener('click', () => selectDay(parseInt(t.dataset.day)));
+  });
+  document.getElementById('resetBtn').addEventListener('click', () => selectDay(null));
+}
+
+function selectDay(dayNum){
+  activeDay = dayNum;
+  document.querySelectorAll('.ticket').forEach(t => {
+    t.classList.toggle('active', parseInt(t.dataset.day) === dayNum);
+  });
+  renderMap(dayNum);
+  renderDetail(dayNum);
+}
+
+/* ============ ROUTE SHEET ============ */
+function renderSheet(){
+  const sheet = document.getElementById('sheet');
+  trip.forEach(d => {
+    const stopNames = d.stops.map(s => s.name).join(' · ');
+    const row = document.createElement('div');
+    row.className = 'sheet-row';
+    row.style.setProperty('--sheet-color', DAY_COLORS[d.day-1]);
+    row.innerHTML = `
+      <div class="sheet-day">${String(d.day).padStart(2,'0')}</div>
+      <div class="sheet-title">${d.title}<small>${d.tag}</small></div>
+      <div class="sheet-stops">${stopNames}</div>
+      <div class="sheet-drive">${d.drive}</div>
+    `;
+    row.addEventListener('click', () => { selectDay(d.day); document.getElementById('map-section').scrollIntoView({behavior:'smooth'}); });
+    row.style.cursor = 'pointer';
+    sheet.appendChild(row);
+  });
+}
+
+/* ============ INIT ============ */
+renderNav();
+renderSheet();
+renderMap(null);
+renderDetail(null);
+</script>
+</body>
+</html>
