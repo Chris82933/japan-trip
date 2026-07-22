@@ -37,7 +37,7 @@
     font-family:'Inter',sans-serif;
     -webkit-font-smoothing:antialiased;
   }
-  h1,h2,h3,.display{
+  h1,h2,h3,h4,.display{
     font-family:'Big Shoulders Display',sans-serif;
     font-weight:800;
     text-transform:uppercase;
@@ -143,6 +143,11 @@
     padding-bottom:10px;
     margin-bottom:22px;
     scrollbar-width:thin;
+    position:sticky;
+    top:0;
+    background:var(--snow);
+    z-index:20;
+    padding-top:10px;
   }
   .ticket{
     flex:0 0 auto;
@@ -208,10 +213,11 @@
     text-transform:uppercase;
     color:var(--text-soft);
     border:1px dashed var(--line);
-    background:transparent;
+    background:var(--paper);
     cursor:pointer;
   }
   .ticket-reset:hover{border-color:var(--ice);color:var(--ice);}
+  .ticket-reset.active{border-style:solid;border-color:var(--ink);color:var(--ink);background:var(--line-soft);}
 
   /* ---------- MAP + DETAIL ---------- */
   .map-grid{
@@ -221,13 +227,13 @@
     border:1px solid var(--line);
     background:var(--paper);
   }
-  #map{height:560px;width:100%;}
+  #map{height:520px;width:100%;}
   .detail-panel{
     border-left:1px solid var(--line);
     padding:24px;
     display:flex;
     flex-direction:column;
-    max-height:560px;
+    max-height:520px;
     overflow-y:auto;
   }
   .detail-eyebrow{
@@ -287,6 +293,87 @@
   .legend-item{display:flex;align-items:center;gap:7px;}
   .legend-dot{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;}
   .legend-dot svg{width:9px;height:9px;}
+
+  /* ---------- OPTIONS SECTION ---------- */
+  .options-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:24px;
+    flex-wrap:wrap;
+  }
+  .options-head .day-chip{
+    font-family:'Big Shoulders Display',sans-serif;
+    font-weight:800;
+    font-size:22px;
+    color:#fff;
+    background:var(--options-color,var(--ice));
+    padding:4px 14px;
+    line-height:1.3;
+  }
+  .options-head h3{font-size:clamp(22px,3vw,30px);color:var(--ink);}
+  .options-head .options-drive{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    color:var(--text-soft);
+    margin-left:auto;
+  }
+  .options-narrative{font-size:13.5px;color:var(--text-soft);line-height:1.6;max-width:760px;margin-bottom:28px;}
+  .options-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:0;
+    border:1px solid var(--line);
+    background:var(--paper);
+  }
+  .option-col{
+    padding:22px;
+    border-right:1px solid var(--line);
+  }
+  .option-col:last-child{border-right:none;}
+  .option-col-head{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-bottom:16px;
+    padding-bottom:12px;
+    border-bottom:2px solid var(--col-color,var(--ice));
+  }
+  .option-col-icon{
+    width:24px;height:24px;
+    border-radius:50%;
+    background:var(--col-color,var(--ice));
+    color:#fff;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .option-col-icon svg{width:12px;height:12px;}
+  .option-col-title{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink);
+  }
+  .option-card{
+    padding:14px 0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .option-card:last-child{border-bottom:none;padding-bottom:0;}
+  .option-card:first-child{padding-top:0;}
+  .option-tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9.5px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--col-color,var(--ice));
+    border:1px solid var(--col-color,var(--ice));
+    padding:2px 7px;
+    margin-bottom:7px;
+  }
+  .option-name{font-weight:600;font-size:14px;color:var(--ink);margin-bottom:4px;}
+  .option-note{font-size:12.5px;color:var(--text-soft);line-height:1.5;}
+  .option-empty{font-size:12.5px;color:var(--text-soft);font-style:italic;line-height:1.5;}
 
   /* ---------- ROUTE SHEET ---------- */
   .sheet{border:1px solid var(--line);background:var(--paper);}
@@ -353,8 +440,12 @@
   /* ---------- RESPONSIVE ---------- */
   @media (max-width:860px){
     .map-grid{grid-template-columns:1fr;}
-    #map{height:360px;}
+    #map{height:340px;}
     .detail-panel{max-height:none;border-left:none;border-top:1px solid var(--line);}
+    .options-grid{grid-template-columns:1fr;}
+    .option-col{border-right:none;border-bottom:1px solid var(--line);}
+    .option-col:last-child{border-bottom:none;}
+    .options-head .options-drive{margin-left:0;width:100%;}
     .sheet-row{grid-template-columns:1fr;gap:6px;}
     .sheet-row.head{display:none;}
     .sheet-day{font-size:20px;}
@@ -392,7 +483,7 @@
     <div class="section-head">
       <div>
         <h2>Route &amp; Itinerary</h2>
-        <div class="section-sub">Tap a day to see that leg on the map, or view the full loop. All drive legs are estimates under 1.5 hrs, except the airport transfers on day 1 &amp; 7.</div>
+        <div class="section-sub">Tap a day to see that leg on the map, plus the mountain, stay, and dining options for that stop below.</div>
       </div>
     </div>
 
@@ -408,6 +499,16 @@
       <span class="legend-item"><span class="legend-dot" style="background:var(--pine)">&#9670;</span> Eat</span>
       <span class="legend-item"><span class="legend-dot" style="background:var(--text-soft)">&#9992;</span> Transit</span>
     </div>
+  </section>
+
+  <section id="options-section">
+    <div class="section-head">
+      <div>
+        <h2>Day-by-Day Options</h2>
+        <div class="section-sub">Mountain, accommodation, and restaurant picks for the selected day — a primary pick plus alternatives.</div>
+      </div>
+    </div>
+    <div id="optionsBody"></div>
   </section>
 
   <section id="sheet-section">
@@ -461,8 +562,6 @@ const ICONS = {
   transit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16l20-7-7 20-3-8-8-3-2-2z"/></svg>'
 };
 
-const TYPE_COLOR = { ride:'var(--ice)', stay:'var(--ember)', eat:'var(--pine)', transit:'var(--text-soft)' };
-
 const trip = [
   {
     day:1, tag:"Otaru", title:"Arrival & Otaru",
@@ -472,7 +571,23 @@ const trip = [
       {name:"New Chitose Airport", type:"transit", time:"Midday", note:"Pick up 4WD van/SUV.", lat:42.7791317, lng:141.6866364},
       {name:"Otaru Canal", type:"ride", time:"Late afternoon", note:"Stroll the gas-lit canal and stone warehouses.", lat:43.199041, lng:141.0021176},
       {name:"Otaru Tatsumi Sushi", type:"eat", time:"Dinner", note:"Well-rated local sushi counter near the canal.", lat:43.1949404, lng:141.0055246}
-    ]
+    ],
+    options:{
+      mountain:[
+        {name:"Sapporo Teine", tag:"Optional add-on", note:"Small, steep-and-deep local mountain 30–40 min from Sapporo. Swap in for the Otaru sightseeing if your group wants a 6th riding day."},
+        {name:"Sapporo Kokusai", tag:"Optional add-on", note:"Another Sapporo-area local resort, about an hour out. Good backup if Kiroro or Teine are having a weather day later in the week."}
+      ],
+      stay:[
+        {name:"Hotel Nord Otaru", tag:"Primary pick", note:"Right on the canal, roughly 70-dish breakfast buffet with a make-your-own kaisendon station."},
+        {name:"Dormy Inn Premium Otaru", tag:"Has onsen", note:"Natural hot spring + sauna on site, near the station — a soak before the trip really starts."},
+        {name:"Hotel Torifito Otaru Canal", tag:"Budget", note:"Simple, well-located, shared-bath option for keeping night one cheap."}
+      ],
+      eat:[
+        {name:"Otaru Tatsumi Sushi", tag:"Primary pick", note:"Locally recommended sushi counter near the canal, fresh and reasonably priced."},
+        {name:"Takinami Donburi", tag:"Casual", note:"Popular seafood-bowl spot — try the Wagamama Bowl with your pick of toppings."},
+        {name:"Otaru Masazushi (Takumi set)", tag:"Splurge", note:"Long-established house on Otaru's 'Sushi Street'; the 12-piece Takumi set is the move."}
+      ]
+    }
   },
   {
     day:2, tag:"Kiroro", title:"Kiroro",
@@ -481,7 +596,23 @@ const trip = [
     stops:[
       {name:"Kiroro Resort", type:"ride", time:"Full day", note:"Small, uncrowded, deep snow — locals' favorite over Niseko.", lat:43.0677043, lng:140.9895954},
       {name:"Yu Kiroro", type:"stay", time:"Overnight", note:"Slopeside condo-hotel with onsen access; kitchen in-room.", lat:43.0746056, lng:140.9853285}
-    ]
+    ],
+    options:{
+      mountain:[
+        {name:"Mt. Asari (Kiroro)", tag:"Cruisy side", note:"Beginner/intermediate groomers and gentler pitch — good warm-up zone for the day."},
+        {name:"Mt. Nagamine (Kiroro)", tag:"Powder side", note:"Steeper terrain plus Kiroro's best tree skiing and backcountry-gate access."}
+      ],
+      stay:[
+        {name:"Yu Kiroro", tag:"Primary pick", note:"Ski-in/ski-out condo-hotel, roomy suites with kitchens, onsen access, in-house farm-to-table restaurant."},
+        {name:"Sheraton Hokkaido Kiroro Resort", tag:"Alternative", note:"Bigger full-service hotel, several restaurants, open-air geothermal baths."},
+        {name:"Club Med Kiroro Grand", tag:"All-inclusive", note:"All-inclusive option if you'd rather have meals bundled in — less necessary for your group, but there if you want it."}
+      ],
+      eat:[
+        {name:"Yukashi Alpine Bistro", tag:"Primary pick", note:"Farm-to-table Hokkaido tasting menu, in-house at Yu Kiroro."},
+        {name:"Hokki Robata Grill (Sheraton)", tag:"Alternative", note:"Robata-grilled Japanese fare with a fireside feel."},
+        {name:"Rivierouge World Buffet (Sheraton)", tag:"Casual", note:"Buffet mixing Japanese, Indian, and seafood — easy after a long ride day."}
+      ]
+    }
   },
   {
     day:3, tag:"Moiwa", title:"Niseko Moiwa + Check-in",
@@ -491,7 +622,23 @@ const trip = [
       {name:"Niseko Moiwa Ski Resort", type:"ride", time:"Full day", note:"Only 3 lifts, no lift lines, same Niseko powder.", lat:42.8482023, lng:140.6303168},
       {name:"Hotel Kanronomori", type:"stay", time:"Check-in", note:"Kashikiri (private, reservable) onsen bath big enough for 4, plus a public bath. Base for nights 3–6.", lat:42.8468409, lng:140.6230545},
       {name:"Tozanken Ramen", type:"eat", time:"Dinner", note:"No-reservation local favorite in Hirafu — go early.", lat:42.8599397, lng:140.7027646}
-    ]
+    ],
+    options:{
+      mountain:[
+        {name:"Niseko Moiwa", tag:"Primary pick", note:"Only 3 lifts, no lines, same Niseko snow — the quiet, locals' side."},
+        {name:"Annupuri", tag:"Alternative", note:"Quietest of the four Niseko United areas, good tree runs, easy to combine with Moiwa via the connecting bus."}
+      ],
+      stay:[
+        {name:"Hotel Kanronomori", tag:"Primary pick", note:"Kashikiri private onsen bath for your group of 4, plus a public bath. Base for nights 3–6."},
+        {name:"Niseko Prince Hotel Hirafutei", tag:"Alternative", note:"59 rooms with private baths, views of Mt. Yotei or the slopes."},
+        {name:"Niseko Raku Suisan", tag:"Alternative", note:"18 detached guest rooms, each with its own private bath."}
+      ],
+      eat:[
+        {name:"Tozanken Ramen", tag:"Primary pick", note:"No-reservation local favorite — go early, expect a short line."},
+        {name:"Rin", tag:"Alternative", note:"Relaxed izakaya, reasonably priced sake and beer, beloved local spot — book ahead in peak season."},
+        {name:"Niseko Pizza", tag:"Casual", note:"Family-run, takeaway-friendly — good if everyone just wants comfort food after travel."}
+      ]
+    }
   },
   {
     day:4, tag:"Cat ski", title:"Cat Skiing — Chisenupuri",
@@ -500,7 +647,22 @@ const trip = [
     stops:[
       {name:"Chisenupuri CAT Ski", type:"ride", time:"Full day", note:"Unguided snowcat access — the affordable cat-ski option for a group of 4.", lat:42.8689792, lng:140.5951178},
       {name:"Hotel Kanronomori", type:"stay", time:"Evening", note:"Private onsen soak to end the day.", lat:42.8468409, lng:140.6230545}
-    ]
+    ],
+    options:{
+      mountain:[
+        {name:"Chisenupuri (Hokkaido Backcountry Club)", tag:"Primary — most affordable", note:"Unguided, pay-per-cat-lift at the old ski area, 15 min from Hirafu, onsen at the base."},
+        {name:"Niseko Weiss Powder Cats (Hanazono)", tag:"Guided, pricier", note:"Guided, includes lunch at Park Hyatt Niseko Hanazono. Group or private tour — private day from ~¥690,000 for up to 12, so better value split across a bigger group."},
+        {name:"HBC Shimamaki (multi-day)", tag:"Remote, expert", note:"~2 hrs from Niseko, some of the best cat terrain in Japan, but needs an extra overnight — worth knowing for a future trip."}
+      ],
+      stay:[
+        {name:"Hotel Kanronomori", tag:"Same base", note:"Staying put — same kashikiri private onsen as the previous night."}
+      ],
+      eat:[
+        {name:"Kumo", tag:"Primary pick", note:"Izakaya-style shared plates at Skye Niseko — cozy après-cat-ski spot."},
+        {name:"AFURI", tag:"Alternative", note:"Tokyo ramen import, yuzu-forward broth, vegan options."},
+        {name:"Akaru", tag:"Alternative", note:"Husband-and-wife run, refined but relaxed, seasonal Hokkaido ingredients."}
+      ]
+    }
   },
   {
     day:5, tag:"Niseko", title:"Niseko United",
@@ -509,7 +671,22 @@ const trip = [
     stops:[
       {name:"Niseko Tokyu Grand Hirafu", type:"ride", time:"Full day", note:"Go on a weekday if possible to dodge the busiest crowds.", lat:42.8616549, lng:140.6982419},
       {name:"KAMIMURA", type:"eat", time:"Dinner", note:"Well-regarded tasting-menu restaurant — good pick for a night out.", lat:42.8600708, lng:140.7058394}
-    ]
+    ],
+    options:{
+      mountain:[
+        {name:"Grand Hirafu", tag:"Primary pick", note:"The famous terrain — biggest lift network, liveliest base village."},
+        {name:"Hanazono", tag:"Alternative", note:"More terrain-park and family-focused, also home base for the Weiss cat ski operation."},
+        {name:"Niseko Village", tag:"Alternative", note:"Mid-mountain, home to the Hilton/Green Leaf, well-groomed cruisers."}
+      ],
+      stay:[
+        {name:"Hotel Kanronomori", tag:"Same base", note:"Third night in — private onsen after the big resort day."}
+      ],
+      eat:[
+        {name:"KAMIMURA", tag:"Primary — splurge", note:"French-Japanese tasting menu, one of Niseko's best-reviewed restaurants — book ahead."},
+        {name:"Sushi Shin", tag:"Alternative", note:"Edomae sushi from the team behind Sapporo's three-Michelin-star Sushi Miyakawa."},
+        {name:"Trattoria R", tag:"Alternative", note:"Italian prix fixe built on Hokkaido ingredients, good for a table of 4."}
+      ]
+    }
   },
   {
     day:6, tag:"Rest", title:"Onsen Rest Day",
@@ -517,7 +694,21 @@ const trip = [
     drive:"No drive — rest day",
     stops:[
       {name:"Hotel Kanronomori", type:"stay", time:"All day", note:"Private onsen, town wandering, café time.", lat:42.8468409, lng:140.6230545}
-    ]
+    ],
+    options:{
+      mountain:[
+        {name:"Snowshoeing / cross-country", tag:"Optional, low-key", note:"Available around Niseko/Hirafu if you want to move a little without actually riding."},
+        {name:"Day trip to Toyako Onsen", tag:"Optional, change of scenery", note:"~1 hr from Niseko, a lakeside onsen town — an alternative if you'd rather swap locations for the rest day."}
+      ],
+      stay:[
+        {name:"Hotel Kanronomori", tag:"Primary pick", note:"Full day of kashikiri private onsen use — the whole point of today."}
+      ],
+      eat:[
+        {name:"JAM Café Bar", tag:"Primary pick", note:"Relaxed local favorite, original menu, good cocktails."},
+        {name:"Wolf Burgers", tag:"Casual", note:"Food-truck burgers — good comfort food for a lazy rest-day dinner."},
+        {name:"Jojos Cafe and Bar", tag:"Casual", note:"Homemade Hokkaido beef burgers, pizza, and pasta."}
+      ]
+    }
   },
   {
     day:7, tag:"Rusutsu", title:"Rusutsu & Departure",
@@ -526,7 +717,22 @@ const trip = [
     stops:[
       {name:"Rusutsu Resort Hotel & Convention", type:"ride", time:"Morning / early PM", note:"Three mountains, good tree skiing, less crowded than Niseko.", lat:42.7528908, lng:140.9023717},
       {name:"New Chitose Airport", type:"transit", time:"Evening", note:"Drop off the van and depart.", lat:42.7791317, lng:141.6866364}
-    ]
+    ],
+    options:{
+      mountain:[
+        {name:"Rusutsu — West Mountain", tag:"Primary — groomers", note:"Family-friendly, cruisy, ski-in/ski-out from the hotel."},
+        {name:"Rusutsu — East Mtn & Mt. Isola", tag:"Alternative — trees", note:"Rusutsu's best tree skiing, less crowded, continuous fall-line pitch."}
+      ],
+      stay:[
+        {name:"Rusutsu Resort Hotel & Convention", tag:"If extending", note:"Ski-in/ski-out, onsen on site — only needed if you add a night instead of flying out same day."},
+        {name:"The Westin Rusutsu Resort", tag:"Alternative", note:"Wellness-focused sister hotel on the same property, slightly quieter."}
+      ],
+      eat:[
+        {name:"Mokomokuya", tag:"Primary pick", note:"All-you-can-eat Genghis Khan (grilled lamb) BBQ, just outside the resort."},
+        {name:"Uo-teru", tag:"Alternative", note:"Seafood-focused izakaya with wagyu sukiyaki and pork shabu-shabu."},
+        {name:"Belle Vue (in-resort)", tag:"Quick / in-resort", note:"French-inspired steak and seafood if you'd rather not leave the hotel before driving out."}
+      ]
+    }
   }
 ];
 
@@ -580,7 +786,6 @@ function renderMap(dayNum){
     });
   });
 
-  // connect days in order for the full-trip view
   if(dayNum === null){
     const lastFirst = [];
     trip.forEach(d => { lastFirst.push([d.stops[0].lat, d.stops[0].lng]); });
@@ -602,7 +807,7 @@ function renderDetail(dayNum){
     panel.innerHTML = `
       <div class="detail-eyebrow">Full loop</div>
       <h3>All 7 Days</h3>
-      <div class="detail-narrative">A driving loop from New Chitose Airport through Otaru, Kiroro, and Niseko (Moiwa, Chisenupuri cat-ski, Niseko United), finishing at Rusutsu. Tap any ticket above to zoom into that day's stops and drive time.</div>
+      <div class="detail-narrative">A driving loop from New Chitose Airport through Otaru, Kiroro, and Niseko (Moiwa, Chisenupuri cat-ski, Niseko United), finishing at Rusutsu. Tap any ticket above to zoom into that day's stops, drive time, and the mountain/stay/eat options below.</div>
     `;
     return;
   }
@@ -624,6 +829,60 @@ function renderDetail(dayNum){
     <h3>${d.title}</h3>
     <div class="detail-narrative">${d.narrative}</div>
     <ul class="stop-list">${stopsHtml}</ul>
+  `;
+}
+
+/* ============ OPTIONS SECTION ============ */
+const COL_META = {
+  mountain: { label:"Mountain", icon: ICONS.ride },
+  stay: { label:"Stay", icon: ICONS.stay },
+  eat: { label:"Eat", icon: ICONS.eat }
+};
+
+function optionColumn(key, items, color){
+  let cards = '';
+  if(!items || items.length === 0){
+    cards = `<div class="option-empty">Nothing scheduled here today.</div>`;
+  } else {
+    items.forEach(o => {
+      cards += `
+        <div class="option-card">
+          <span class="option-tag" style="--col-color:${color}">${o.tag}</span>
+          <div class="option-name">${o.name}</div>
+          <div class="option-note">${o.note}</div>
+        </div>`;
+    });
+  }
+  return `
+    <div class="option-col">
+      <div class="option-col-head" style="--col-color:${color}">
+        <div class="option-col-icon" style="background:${color}"><div style="width:12px;height:12px;">${COL_META[key].icon}</div></div>
+        <div class="option-col-title">${COL_META[key].label}</div>
+      </div>
+      ${cards}
+    </div>`;
+}
+
+function renderOptions(dayNum){
+  const body = document.getElementById('optionsBody');
+  if(dayNum === null){
+    body.innerHTML = `<div class="options-narrative">Pick a day above to see the mountain, stay, and dining options for that stop.</div>`;
+    return;
+  }
+  const d = trip.find(x => x.day === dayNum);
+  const color = DAY_COLORS[d.day-1];
+  body.innerHTML = `
+    <div class="options-head" style="--options-color:${color}">
+      <span class="day-chip">Day 0${d.day}</span>
+      <h3>${d.title}</h3>
+      <span class="options-drive">${d.drive}</span>
+    </div>
+    <div class="options-narrative">${d.narrative}</div>
+    <div class="options-grid">
+      ${optionColumn('mountain', d.options.mountain, color)}
+      ${optionColumn('stay', d.options.stay, color)}
+      ${optionColumn('eat', d.options.eat, color)}
+    </div>
   `;
 }
 
@@ -653,8 +912,10 @@ function selectDay(dayNum){
   document.querySelectorAll('.ticket').forEach(t => {
     t.classList.toggle('active', parseInt(t.dataset.day) === dayNum);
   });
+  document.getElementById('resetBtn').classList.toggle('active', dayNum === null);
   renderMap(dayNum);
   renderDetail(dayNum);
+  renderOptions(dayNum);
 }
 
 /* ============ ROUTE SHEET ============ */
@@ -680,8 +941,7 @@ function renderSheet(){
 /* ============ INIT ============ */
 renderNav();
 renderSheet();
-renderMap(null);
-renderDetail(null);
+selectDay(1);
 </script>
 </body>
 </html>
