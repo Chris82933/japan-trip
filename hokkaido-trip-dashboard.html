@@ -26,6 +26,7 @@
     --text-soft:#5A6579;
     --text-inv:#EAF0F8;
     --text-inv-soft:#9FB0C9;
+    --gold:#C9A24B;
     --radius:2px;
   }
   *{box-sizing:border-box;}
@@ -321,16 +322,22 @@
   .options-narrative{font-size:13.5px;color:var(--text-soft);line-height:1.6;max-width:760px;margin-bottom:28px;}
   .options-grid{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(4,1fr);
     gap:0;
     border:1px solid var(--line);
     background:var(--paper);
   }
   .option-col{
-    padding:22px;
+    padding:20px;
     border-right:1px solid var(--line);
   }
   .option-col:last-child{border-right:none;}
+  @media (max-width:1080px) and (min-width:861px){
+    .options-grid{grid-template-columns:repeat(2,1fr);}
+    .option-col{border-bottom:1px solid var(--line);}
+    .option-col:nth-child(2n){border-right:none;}
+    .option-col:nth-last-child(-n+2){border-bottom:none;}
+  }
   .option-col-head{
     display:flex;
     align-items:center;
@@ -370,6 +377,26 @@
     border:1px solid var(--col-color,var(--ice));
     padding:2px 7px;
     margin-bottom:7px;
+  }
+  .option-cardhead{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .option-cardhead .option-tag{margin-bottom:7px;}
+  .eat-price{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:0.04em;
+    color:var(--pine);
+    background:rgba(51,96,79,0.09);
+    border:1px solid rgba(51,96,79,0.28);
+    padding:1px 7px;
+    margin-bottom:7px;
+    white-space:nowrap;
+    cursor:help;
   }
   .option-name{font-weight:600;font-size:14px;color:var(--ink);margin-bottom:4px;}
   .option-note{font-size:12.5px;color:var(--text-soft);line-height:1.5;}
@@ -453,9 +480,197 @@
     .stat-stub{flex:1 1 45%;}
   }
 
+  /* ---------- TOOLBAR / SHARE ---------- */
+  .toolbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:26px;
+  }
+  .btn{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--text-inv);
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.22);
+    padding:9px 14px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .btn:hover{background:rgba(255,255,255,0.13);border-color:rgba(255,255,255,0.4);}
+  .btn svg{width:13px;height:13px;flex:0 0 auto;}
+  .btn.copied{border-color:var(--ice-light);color:var(--ice-light);}
+
+  /* ---------- PRICE TIER + FEATURE CHIPS ---------- */
+  .tier{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9.5px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:3px 8px;
+    color:#fff;
+    background:var(--tier-color,var(--ice));
+    white-space:nowrap;
+  }
+  .price{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--text-soft);
+    white-space:nowrap;
+  }
+  .price b{color:var(--ink);font-weight:600;}
+  .tier-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:6px 0 8px;
+  }
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+  .chip{
+    font-size:10.5px;
+    line-height:1.3;
+    color:var(--text-soft);
+    background:var(--snow);
+    border:1px solid var(--line);
+    padding:3px 8px;
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+  }
+  .chip::before{
+    content:"";
+    width:5px;height:5px;
+    border-radius:50%;
+    background:var(--chip-color,var(--ice));
+    flex:0 0 auto;
+  }
+
+  /* ---------- ONSEN TYPE TAG ---------- */
+  .onsen-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9.5px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    padding:3px 8px;
+    white-space:nowrap;
+    border:1px solid;
+  }
+  .onsen-tag svg{flex:0 0 auto;}
+  .onsen-good{ color:#1E6E8C; border-color:#9AD1E6; background:#EAF6FB; }
+  .onsen-muted{ color:var(--text-soft); border-color:var(--line); background:var(--snow); }
+
+  /* ---------- ONSEN CALLOUT ---------- */
+  .onsen-callout{
+    border:1px solid var(--line);
+    border-left:4px solid var(--ice);
+    background:var(--paper);
+    padding:18px 20px 16px;
+    margin-top:18px;
+  }
+  .onsen-callout-head{
+    display:flex;align-items:center;gap:8px;
+    font-family:'Big Shoulders Display',sans-serif;
+    font-weight:800;text-transform:uppercase;letter-spacing:0.01em;
+    font-size:17px;color:var(--ink);
+    margin-bottom:14px;
+  }
+  .onsen-callout-head svg{color:var(--ice);width:15px;height:15px;}
+  .onsen-callout-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px 22px;
+  }
+  .onsen-line{display:flex;flex-direction:column;gap:6px;}
+  .onsen-line .onsen-tag{align-self:flex-start;}
+  .onsen-desc{font-size:12.5px;color:var(--text-soft);line-height:1.5;}
+  .onsen-foot{
+    margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);
+    font-size:12px;color:var(--text-soft);line-height:1.55;
+  }
+  @media (max-width:860px){
+    .onsen-callout-grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------- STAYS SUMMARY ---------- */
+  .stays-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+  }
+  .stay-card{
+    border:1px solid var(--line);
+    background:var(--paper);
+    border-top:5px solid var(--stay-accent,var(--ember));
+    padding:20px 22px 22px;
+    display:flex;
+    flex-direction:column;
+  }
+  .stay-card.optional{border-top-style:dashed;background:var(--snow);}
+  .stay-nights{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:0.09em;
+    text-transform:uppercase;
+    color:var(--text-soft);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:8px;
+  }
+  .stay-nights .nt-badge{
+    color:#fff;background:var(--stay-accent,var(--ember));
+    padding:2px 8px;font-weight:500;letter-spacing:0.04em;
+  }
+  .stay-card h3{font-size:24px;color:var(--ink);margin-bottom:2px;}
+  .stay-place{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;color:var(--text-soft);
+    margin-bottom:12px;
+  }
+  .stay-card .stay-note{font-size:12.5px;color:var(--text-soft);line-height:1.55;margin-top:2px;}
+  .stays-note{
+    font-size:12px;color:var(--text-soft);line-height:1.55;
+    margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);
+  }
+  @media (max-width:860px){
+    .stays-grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------- MAP SELECTED-DAY BANNER ---------- */
+  .map-hint{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--text-soft);
+    margin:-6px 0 16px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .map-hint .dot{width:8px;height:8px;border-radius:50%;background:var(--ice);display:inline-block;}
+
+  @media print{
+    .ticket-nav,.map-hint,.toolbar,.legend,#map{display:none !important;}
+    .hero{padding:28px 24px;}
+    body{background:#fff;}
+    section{padding:20px 0;break-inside:avoid;}
+    .stay-card,.sheet,.options-grid{break-inside:avoid;}
+  }
+
   .leaflet-popup-content-wrapper{border-radius:0;font-family:'Inter',sans-serif;}
   .leaflet-popup-content{margin:12px 14px;font-size:12.5px;}
   .leaflet-popup-content b{font-family:'Big Shoulders Display',sans-serif;font-size:15px;text-transform:uppercase;}
+  .leaflet-popup-content .pp-tier{display:inline-block;margin-top:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-soft);}
 </style>
 </head>
 <body>
@@ -470,9 +685,19 @@
     <div class="stat-row">
       <div class="stat-stub"><div class="stat-num">7</div><div class="stat-label">Days total</div></div>
       <div class="stat-stub"><div class="stat-num"><em>5</em></div><div class="stat-label">Riding days</div></div>
-      <div class="stat-stub"><div class="stat-num">4<span class="mono" style="font-size:16px;">+cat</span></div><div class="stat-label">Resorts / zones</div></div>
+      <div class="stat-stub"><div class="stat-num">5</div><div class="stat-label">Resorts ridden</div></div>
       <div class="stat-stub"><div class="stat-num">~5<span class="mono" style="font-size:16px;">h</span></div><div class="stat-label">Total driving</div></div>
       <div class="stat-stub"><div class="stat-num">4<span class="mono" style="font-size:16px;">nt</span></div><div class="stat-label">Private onsen</div></div>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="printBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg>
+        Print / Save PDF
+      </button>
+      <button class="btn" id="copyBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="1"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy plan for chat
+      </button>
     </div>
   </div>
 </header>
@@ -483,11 +708,12 @@
     <div class="section-head">
       <div>
         <h2>Route &amp; Itinerary</h2>
-        <div class="section-sub">Tap a day to see that leg on the map, plus the mountain, stay, and dining options for that stop below.</div>
+        <div class="section-sub">The whole loop stays on the map at once — real driving roads, not straight lines. Tap a day to <b>highlight</b> that leg; every other day stays visible, just dimmed.</div>
       </div>
     </div>
 
     <div class="ticket-nav" id="ticketNav"></div>
+    <div class="map-hint"><span class="dot" id="hintDot"></span><span id="hintText">Showing all 7 days — tap a ticket to highlight one.</span></div>
 
     <div class="map-grid">
       <div id="map"></div>
@@ -505,10 +731,22 @@
     <div class="section-head">
       <div>
         <h2>Day-by-Day Options</h2>
-        <div class="section-sub">Mountain, accommodation, and restaurant picks for the selected day — a primary pick plus alternatives.</div>
+        <div class="section-sub">Mountain, stay, food, and after-riding picks for the selected day. Restaurant prices: <b>¥</b> cheap eats (under ~¥2,000pp) · <b>¥¥</b> mid (~¥2–5,000pp) · <b>¥¥¥</b> splurge / tasting.</div>
       </div>
     </div>
     <div id="optionsBody"></div>
+  </section>
+
+  <section id="stays-section">
+    <div class="section-head">
+      <div>
+        <h2>Where We're Staying</h2>
+        <div class="section-sub">Four confirmed bases across the week, plus alternatives per day in the section above. Tiers and prices are indicative peak-season estimates to sanity-check against real quotes.</div>
+      </div>
+    </div>
+    <div class="stays-grid" id="staysGrid"></div>
+    <div id="onsenGuide"></div>
+    <div class="stays-note" id="staysNote"></div>
   </section>
 
   <section id="sheet-section">
@@ -535,8 +773,8 @@
         <p>4WD van/SUV, not a true camper — you're staying in real beds each night. Get quotes from Peak Niseko Car Rental, plus a couple of local winter-van outfits to compare.</p>
       </div>
       <div class="note">
-        <h4>Cat skiing</h4>
-        <p>Chisenupuri (Hokkaido Backcountry Club) is unguided and the most affordable option for a group of 4. Book ahead — weather-dependent, keep the day flexible.</p>
+        <h4>Quiet powder day</h4>
+        <p>Day 4 is Niseko Annupuri — the calmest Niseko United sector, lift-served with great trees. Prefer a snowcat day instead? Chisenupuri (Hokkaido Backcountry Club) is the affordable, unguided swap — weather-dependent, so keep it flexible.</p>
       </div>
       <div class="note">
         <h4>Lift tickets</h4>
@@ -559,7 +797,8 @@ const ICONS = {
   ride: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20 L10 7 L14 14 L17 9 L21 20 Z"/></svg>',
   stay: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18c1.5-2 2.5-3 4-3s2.5 1 4 1 2.5-1 4-1 2.5 1 4 3"/><path d="M4 13c1.5-2 2.5-3 4-3s2.5 1 4 1 2.5-1 4-1 2.5 1 4 3"/></svg>',
   eat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v7a2 2 0 0 0 4 0V3M9 10v11M17 3c-1.5 0-3 1.5-3 4s1.5 4 3 4v10"/></svg>',
-  transit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16l20-7-7 20-3-8-8-3-2-2z"/></svg>'
+  transit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16l20-7-7 20-3-8-8-3-2-2z"/></svg>',
+  apres: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 5.9 6.3.5-4.8 4 1.5 6.1L12 21l-5.4 3.5 1.5-6.1-4.8-4 6.3-.5z"/></svg>'
 };
 
 const trip = [
@@ -580,12 +819,23 @@ const trip = [
       stay:[
         {name:"Hotel Nord Otaru", tag:"Primary pick", note:"Right on the canal, roughly 70-dish breakfast buffet with a make-your-own kaisendon station."},
         {name:"Dormy Inn Premium Otaru", tag:"Has onsen", note:"Natural hot spring + sauna on site, near the station — a soak before the trip really starts."},
-        {name:"Hotel Torifito Otaru Canal", tag:"Budget", note:"Simple, well-located, shared-bath option for keeping night one cheap."}
+        {name:"OMO5 Otaru by Hoshino Resorts", tag:"Mid · group", note:"Design hotel in a restored 1930s bank by the station — connecting rooms and a lounge that suit a group of 4."},
+        {name:"Hotel Torifito Otaru Canal", tag:"Budget", note:"Simple, well-located, shared-bath option for keeping night one cheap."},
+        {name:"Otarunai Backpackers Morinoki", tag:"Cheapest", note:"Friendly heritage-house hostel — dorm beds or a private room, shared kitchen. The rock-bottom option if the group wants to save night one."}
       ],
       eat:[
-        {name:"Otaru Tatsumi Sushi", tag:"Primary pick", note:"Locally recommended sushi counter near the canal, fresh and reasonably priced."},
-        {name:"Takinami Donburi", tag:"Casual", note:"Popular seafood-bowl spot — try the Wagamama Bowl with your pick of toppings."},
-        {name:"Otaru Masazushi (Takumi set)", tag:"Splurge", note:"Long-established house on Otaru's 'Sushi Street'; the 12-piece Takumi set is the move."}
+        {name:"Otaru Tatsumi Sushi", tag:"Primary pick", price:"¥¥", note:"Locally recommended sushi counter near the canal, fresh and reasonably priced."},
+        {name:"Isezushi (Ise Sushi)", tag:"Top-rated", price:"¥¥¥", note:"One of Otaru's most acclaimed sushi houses — impeccable local seafood, book ahead."},
+        {name:"Otaru Masazushi (Takumi set)", tag:"Splurge", price:"¥¥¥", note:"Long-established house on Otaru's 'Sushi Street'; the 12-piece Takumi set is the move."},
+        {name:"Otaru Beer Warehouse No.1", tag:"Group / beer hall", price:"¥¥", note:"Lively brewpub in a canal warehouse — house lagers and hearty plates, an easy first-night group dinner."},
+        {name:"Takinami Donburi", tag:"Cheap eats", price:"¥", note:"Popular seafood-bowl spot — try the Wagamama Bowl with your pick of toppings."},
+        {name:"LeTAO (Le Chocolat / café)", tag:"Dessert", price:"¥", note:"Otaru's famous double-fromage cheesecake and hot chocolate — a sweet stop on the canal walk."}
+      ],
+      do:[
+        {name:"Otaru Canal illumination", tag:"Evening stroll", note:"The gas lamps and stone warehouses lit up after dark — the classic Otaru photo, five minutes from dinner."},
+        {name:"Sakaimachi St & Music Box Museum", tag:"Wander", note:"Historic shopping street of glassblowing studios, the steam-clock, and a huge antique music-box hall."},
+        {name:"Nikka Whisky Yoichi Distillery", tag:"Tasting trip", note:"~25 min away — tour the historic distillery and taste single malts. A great low-key day-one outing (designate a driver)."},
+        {name:"Tanaka Shuzo Kikkogura sake brewery", tag:"Free tasting", note:"Working sake brewery in town with free tastings of Otaru's own 'Takara' label."}
       ]
     }
   },
@@ -605,12 +855,19 @@ const trip = [
       stay:[
         {name:"Yu Kiroro", tag:"Primary pick", note:"Ski-in/ski-out condo-hotel, roomy suites with kitchens, onsen access, in-house farm-to-table restaurant."},
         {name:"Sheraton Hokkaido Kiroro Resort", tag:"Alternative", note:"Bigger full-service hotel, several restaurants, open-air geothermal baths."},
-        {name:"Club Med Kiroro Grand", tag:"All-inclusive", note:"All-inclusive option if you'd rather have meals bundled in — less necessary for your group, but there if you want it."}
+        {name:"Club Med Kiroro Grand", tag:"All-inclusive", note:"All-inclusive option if you'd rather have meals bundled in — less necessary for your group, but there if you want it."},
+        {name:"2nd night in Otaru + drive up", tag:"Budget move", note:"Kiroro's lodging is all pricey resort. Keeping the Otaru room a 2nd night and driving the 40 min up is the cheapest way to ride Kiroro — you just give up the slopeside onsen."}
       ],
       eat:[
-        {name:"Yukashi Alpine Bistro", tag:"Primary pick", note:"Farm-to-table Hokkaido tasting menu, in-house at Yu Kiroro."},
-        {name:"Hokki Robata Grill (Sheraton)", tag:"Alternative", note:"Robata-grilled Japanese fare with a fireside feel."},
-        {name:"Rivierouge World Buffet (Sheraton)", tag:"Casual", note:"Buffet mixing Japanese, Indian, and seafood — easy after a long ride day."}
+        {name:"Yukashi Alpine Bistro", tag:"Primary pick", price:"¥¥¥", note:"Farm-to-table Hokkaido tasting menu, in-house at Yu Kiroro."},
+        {name:"Hokki Robata Grill (Sheraton)", tag:"Alternative", price:"¥¥", note:"Robata-grilled Japanese fare with a fireside feel."},
+        {name:"Rivierouge World Buffet (Sheraton)", tag:"Buffet", price:"¥¥", note:"Buffet mixing Japanese, Indian, and seafood — easy after a long ride day."},
+        {name:"Mountain Center food court", tag:"Cheap eats", price:"¥", note:"On-mountain ramen, curry and soup-curry at the base — the budget lunch/quick-dinner option."}
+      ],
+      do:[
+        {name:"Yu Kiroro / Sheraton onsen", tag:"Soak", note:"Both bases have open-air geothermal baths looking into the snowy forest — the classic end to a Kiroro day."},
+        {name:"Kiroro Snow World", tag:"Snow play", note:"Snow tubing, snowmobile runs, banana-boat rides and a snow park at the base — good silly fun for a group."},
+        {name:"Snowshoe / night walk", tag:"Low-key", note:"Guided snowshoe tours through the birch forest; clear nights up here are excellent for stargazing away from town lights."}
       ]
     }
   },
@@ -631,36 +888,54 @@ const trip = [
       stay:[
         {name:"Hotel Kanronomori", tag:"Primary pick", note:"Kashikiri private onsen bath for your group of 4, plus a public bath. Base for nights 3–6."},
         {name:"Niseko Prince Hotel Hirafutei", tag:"Alternative", note:"59 rooms with private baths, views of Mt. Yotei or the slopes."},
-        {name:"Niseko Raku Suisan", tag:"Alternative", note:"18 detached guest rooms, each with its own private bath."}
+        {name:"Niseko Grand Hotel", tag:"Mixed-gender onsen", note:"One of the few places around Niseko with a mixed-gender (konyoku) open-air rotenburo, so the whole group can soak together — plus normal separate baths. Older and a shuttle from the lifts, but characterful and well-priced."},
+        {name:"Black Diamond Lodge", tag:"Group + onsen", note:"Sociable ski lodge on the quiet Annupuri/Moiwa side with its own onsen and home-cooked dinners — an easy, mid-priced pick for a group who wants meals sorted."},
+        {name:"The Orchards Niseko", tag:"Self-catered group", note:"Chalets and apartments with full kitchens — split one between the four of you and the per-head cost drops well below the hotels, with room to spread out."},
+        {name:"Owashi Lodge", tag:"Budget", note:"Long-running, dead-central Hirafu budget lodge — nothing fancy, but the cheapest way to be walking distance from the lifts and nightlife."},
+        {name:"Niseko Raku Suisan", tag:"Private-bath splurge", note:"18 detached guest rooms, each with its own private bath — quiet and ryokan-like."},
+        {name:"Zaborin", tag:"Blow-out", note:"15 villas, each with a private indoor and outdoor onsen — the ultimate mixed-group privacy if you want one unforgettable splurge night."}
       ],
       eat:[
-        {name:"Tozanken Ramen", tag:"Primary pick", note:"No-reservation local favorite — go early, expect a short line."},
-        {name:"Rin", tag:"Alternative", note:"Relaxed izakaya, reasonably priced sake and beer, beloved local spot — book ahead in peak season."},
-        {name:"Niseko Pizza", tag:"Casual", note:"Family-run, takeaway-friendly — good if everyone just wants comfort food after travel."}
+        {name:"Tozanken Ramen", tag:"Primary pick", price:"¥", note:"No-reservation local favorite — go early, expect a short line."},
+        {name:"Rakuichi Soba", tag:"Legendary", price:"¥¥¥", note:"Tiny 12-seat hand-cut soba hut made famous by Anthony Bourdain — one of the region's great meals. Reserve well ahead."},
+        {name:"Ezo Seafoods Oyster Bar", tag:"Highly rated", price:"¥¥", note:"Hokkaido oysters, king crab and cold beer in central Hirafu — a fun, buzzy group table."},
+        {name:"Rin", tag:"Izakaya", price:"¥¥", note:"Relaxed izakaya, reasonably priced sake and beer, beloved local spot — book ahead in peak season."},
+        {name:"Niseko Pizza", tag:"Cheap eats", price:"¥", note:"Family-run, takeaway-friendly — good if everyone just wants comfort food after travel."}
+      ],
+      do:[
+        {name:"Kashikiri onsen at Kanronomori", tag:"Soak", note:"Book the private bath for the group on check-in night and reset the legs before the big Niseko days."},
+        {name:"Bar Gyu+ (the 'Fridge Door Bar')", tag:"Hidden bar", note:"Niseko's cult cocktail bar — you enter through a vintage fridge door. Cosy, dim, excellent drinks; get there early."},
+        {name:"Hirafu village stroll", tag:"Wander", note:"Wander the main village for izakaya, ramen, and konbini snacks — the liveliest après scene in the valley."}
       ]
     }
   },
   {
-    day:4, tag:"Cat ski", title:"Cat Skiing — Chisenupuri",
-    narrative:"Backcountry powder day at the old Chisenupuri ski area, now cat-ski only. Unguided, small groups, onsen right at the base.",
-    drive:"Kanronomori → Chisenupuri, ~18 min",
+    day:4, tag:"Annupuri", title:"Niseko Annupuri",
+    narrative:"The quietest of the four Niseko United sectors — lift-served, mellow crowds, and some of the best gladed tree runs in the valley. An easy 20-minute hop from the onsen base.",
+    drive:"Kanronomori → Annupuri, ~20 min",
     stops:[
-      {name:"Chisenupuri CAT Ski", type:"ride", time:"Full day", note:"Unguided snowcat access — the affordable cat-ski option for a group of 4.", lat:42.8689792, lng:140.5951178},
+      {name:"Niseko Annupuri Int'l", type:"ride", time:"Full day", note:"Quietest Niseko United area — lift-served tree runs and short lift lines.", lat:42.8578, lng:140.6540},
       {name:"Hotel Kanronomori", type:"stay", time:"Evening", note:"Private onsen soak to end the day.", lat:42.8468409, lng:140.6230545}
     ],
     options:{
       mountain:[
-        {name:"Chisenupuri (Hokkaido Backcountry Club)", tag:"Primary — most affordable", note:"Unguided, pay-per-cat-lift at the old ski area, 15 min from Hirafu, onsen at the base."},
-        {name:"Niseko Weiss Powder Cats (Hanazono)", tag:"Guided, pricier", note:"Guided, includes lunch at Park Hyatt Niseko Hanazono. Group or private tour — private day from ~¥690,000 for up to 12, so better value split across a bigger group."},
-        {name:"HBC Shimamaki (multi-day)", tag:"Remote, expert", note:"~2 hrs from Niseko, some of the best cat terrain in Japan, but needs an extra overnight — worth knowing for a future trip."}
+        {name:"Niseko Annupuri", tag:"Primary — quiet trees", note:"Lift-served, quietest Niseko United sector — gentle-to-steep gladed runs and easy gate access to the sidecountry."},
+        {name:"Niseko Moiwa (adjacent)", tag:"Even quieter", note:"Right next door with its own 3 lifts and no lines — easy to link up with Annupuri on a light-crowd day."},
+        {name:"Chisenupuri cat-ski", tag:"Backcountry alt", note:"If the group still wants a snowcat day: unguided, affordable cat access at the old ski area, ~15 min from Hirafu with an onsen at the base."}
       ],
       stay:[
         {name:"Hotel Kanronomori", tag:"Same base", note:"Staying put — same kashikiri private onsen as the previous night."}
       ],
       eat:[
-        {name:"Kumo", tag:"Primary pick", note:"Izakaya-style shared plates at Skye Niseko — cozy après-cat-ski spot."},
-        {name:"AFURI", tag:"Alternative", note:"Tokyo ramen import, yuzu-forward broth, vegan options."},
-        {name:"Akaru", tag:"Alternative", note:"Husband-and-wife run, refined but relaxed, seasonal Hokkaido ingredients."}
+        {name:"Kumo", tag:"Primary pick", price:"¥¥", note:"Izakaya-style shared plates at Skye Niseko — cozy après-ride spot."},
+        {name:"Abucha 2", tag:"Local izakaya", price:"¥¥", note:"Long-loved Kutchan izakaya — grilled skewers, sashimi and a deep sake list. Books out fast in season."},
+        {name:"AFURI", tag:"Cheap eats", price:"¥", note:"Tokyo ramen import, yuzu-forward broth, vegan options."},
+        {name:"Akaru", tag:"Refined", price:"¥¥¥", note:"Husband-and-wife run, refined but relaxed, seasonal Hokkaido ingredients."}
+      ],
+      do:[
+        {name:"Night skiing at Grand Hirafu", tag:"Extra laps", note:"Hirafu lights its lower runs until 20:30 — cheap night tickets and near-empty pistes if the legs still have something left."},
+        {name:"Private onsen soak", tag:"Soak", note:"Back to the kashikiri bath at Kanronomori — the quiet-mountain day pairs perfectly with a long soak."},
+        {name:"Yukoro Onsen", tag:"Local bathhouse", note:"No-frills local hot-spring bathhouse between Kutchan and Hirafu — cheap entry, great after a cold day."}
       ]
     }
   },
@@ -682,9 +957,15 @@ const trip = [
         {name:"Hotel Kanronomori", tag:"Same base", note:"Third night in — private onsen after the big resort day."}
       ],
       eat:[
-        {name:"KAMIMURA", tag:"Primary — splurge", note:"French-Japanese tasting menu, one of Niseko's best-reviewed restaurants — book ahead."},
-        {name:"Sushi Shin", tag:"Alternative", note:"Edomae sushi from the team behind Sapporo's three-Michelin-star Sushi Miyakawa."},
-        {name:"Trattoria R", tag:"Alternative", note:"Italian prix fixe built on Hokkaido ingredients, good for a table of 4."}
+        {name:"KAMIMURA", tag:"Primary — splurge", price:"¥¥¥", note:"French-Japanese tasting menu, one of Niseko's best-reviewed restaurants — book ahead."},
+        {name:"Sushi Shin", tag:"Splurge", price:"¥¥¥", note:"Edomae sushi from the team behind Sapporo's three-Michelin-star Sushi Miyakawa."},
+        {name:"An Dining", tag:"Highly rated", price:"¥¥¥", note:"Modern Japanese multi-course in a slick room — a strong alternative if KAMIMURA is full."},
+        {name:"Trattoria R", tag:"Mid", price:"¥¥", note:"Italian prix fixe built on Hokkaido ingredients, good for a table of 4."}
+      ],
+      do:[
+        {name:"Cocktails crawl in Hirafu", tag:"Night out", note:"Make it the big night: Bar Gyu+, Wild Bill's and the village izakaya are all walkable — the liveliest après in Niseko."},
+        {name:"Karaoke", tag:"Group fun", note:"A couple of karaoke spots in Hirafu keep going late — the obvious move for the trip's main resort night."},
+        {name:"Night skiing under the lights", tag:"Extra laps", note:"If anyone's still keen, Grand Hirafu's floodlit runs are right by the village before dinner."}
       ]
     }
   },
@@ -704,9 +985,16 @@ const trip = [
         {name:"Hotel Kanronomori", tag:"Primary pick", note:"Full day of kashikiri private onsen use — the whole point of today."}
       ],
       eat:[
-        {name:"JAM Café Bar", tag:"Primary pick", note:"Relaxed local favorite, original menu, good cocktails."},
-        {name:"Wolf Burgers", tag:"Casual", note:"Food-truck burgers — good comfort food for a lazy rest-day dinner."},
-        {name:"Jojos Cafe and Bar", tag:"Casual", note:"Homemade Hokkaido beef burgers, pizza, and pasta."}
+        {name:"JAM Café Bar", tag:"Primary pick", price:"¥¥", note:"Relaxed local favorite, original menu, good cocktails."},
+        {name:"Niseko Green Farm Café", tag:"Brunch", price:"¥", note:"Mellow café for a slow rest-day brunch — coffee, pancakes and Yotei views."},
+        {name:"Wolf Burgers", tag:"Cheap eats", price:"¥", note:"Food-truck burgers — good comfort food for a lazy rest-day dinner."},
+        {name:"Jojos Cafe and Bar", tag:"Casual", price:"¥", note:"Homemade Hokkaido beef burgers, pizza, and pasta."}
+      ],
+      do:[
+        {name:"Niseko Milk Kobo", tag:"Must-do treat", note:"Takahashi Dairy's café — soft-serve, cream puffs and pizza with a postcard Mt. Yotei view. The quintessential rest-day stop."},
+        {name:"Snowshoe to a Yotei viewpoint", tag:"Gentle move", note:"Easy guided snowshoe loops around Hirafu/Hanazono if you want fresh air without riding."},
+        {name:"Day trip to Lake Toya", tag:"Change of scenery", note:"~1 hr to the lakeside onsen town — foot-baths, lake views and a calmer pace for the day off."},
+        {name:"Spa / massage in Hirafu", tag:"Recover", note:"Several village spas do sports massages — worth booking to reset before the last ride day."}
       ]
     }
   },
@@ -725,79 +1013,166 @@ const trip = [
       ],
       stay:[
         {name:"Rusutsu Resort Hotel & Convention", tag:"If extending", note:"Ski-in/ski-out, onsen on site — only needed if you add a night instead of flying out same day."},
-        {name:"The Westin Rusutsu Resort", tag:"Alternative", note:"Wellness-focused sister hotel on the same property, slightly quieter."}
+        {name:"The Westin Rusutsu Resort", tag:"Alternative", note:"Wellness-focused sister hotel on the same property, slightly quieter."},
+        {name:"Toyako Onsen ryokan", tag:"Scenic + cheaper", note:"If you'd rather end somewhere calmer, the lakeside onsen town of Toya is ~40 min on, with big rotenburo looking over Lake Toya and ryokan rates well under Niseko or Rusutsu."}
       ],
       eat:[
-        {name:"Mokomokuya", tag:"Primary pick", note:"All-you-can-eat Genghis Khan (grilled lamb) BBQ, just outside the resort."},
-        {name:"Uo-teru", tag:"Alternative", note:"Seafood-focused izakaya with wagyu sukiyaki and pork shabu-shabu."},
-        {name:"Belle Vue (in-resort)", tag:"Quick / in-resort", note:"French-inspired steak and seafood if you'd rather not leave the hotel before driving out."}
+        {name:"Mokomokuya", tag:"Primary pick", price:"¥¥", note:"All-you-can-eat Genghis Khan (grilled lamb) BBQ, just outside the resort."},
+        {name:"Uo-teru", tag:"Izakaya", price:"¥¥", note:"Seafood-focused izakaya with wagyu sukiyaki and pork shabu-shabu."},
+        {name:"Belle Vue (in-resort)", tag:"Splurge", price:"¥¥¥", note:"French-inspired steak and seafood if you'd rather not leave the hotel before driving out."},
+        {name:"New Chitose Airport Ramen Dojo", tag:"Cheap eats", price:"¥", note:"Ten Hokkaido ramen shops under one roof in the terminal — the perfect last bowl before the flight."}
+      ],
+      do:[
+        {name:"Rusutsu onsen before you drive", tag:"Soak", note:"A last hot-spring soak at the resort after the morning laps, before the run to the airport."},
+        {name:"Retro indoor amusement park", tag:"Kitschy fun", note:"Rusutsu's in-hotel monorail, antique carousel and arcade are gloriously old-school — a fun 30 minutes out of the cold."},
+        {name:"New Chitose Airport (allow extra time)", tag:"Pre-flight", note:"The best airport in Japan: an onsen with runway views, Royce' Chocolate World, and Doraemon & Steiff shops. Get there early and enjoy it."}
       ]
     }
   }
 ];
 
+/* ============ REAL DRIVING ROUTES (road geometry, precomputed via OSRM) ============ */
+const ROUTES = {
+    1: [[42.77913, 141.68657], [42.7745, 141.68754], [42.77473, 141.67925], [42.76395, 141.68059], [42.76279, 141.66831], [42.77479, 141.65706], [42.77653, 141.62601], [42.79891, 141.62607], [42.82896, 141.61306], [42.83835, 141.60282], [42.85002, 141.57185], [42.85854, 141.56086], [42.88331, 141.54976], [42.91671, 141.54705], [42.9813, 141.47399], [43.01638, 141.46317], [43.02928, 141.44646], [43.05833, 141.42558], [43.08871, 141.41356], [43.10451, 141.37185], [43.10006, 141.33574], [43.1022, 141.31412], [43.09019, 141.26985], [43.09943, 141.25413], [43.11282, 141.24721], [43.12107, 141.2359], [43.13058, 141.20885], [43.14085, 141.15194], [43.15314, 141.12794], [43.15243, 141.11072], [43.16164, 141.10742], [43.175, 141.0679], [43.18158, 141.01955], [43.19898, 141.00195]],
+    2: [[43.19898, 141.00195], [43.1961, 141.00564], [43.18802, 141.01021], [43.18671, 141.01212], [43.16917, 140.99311], [43.16204, 140.99898], [43.16301, 141.00069], [43.16563, 140.99974], [43.16564, 141.00165], [43.16878, 141.00574], [43.16356, 141.0083], [43.16286, 141.01314], [43.16359, 141.01682], [43.15991, 141.02118], [43.15925, 141.01629], [43.15758, 141.01978], [43.15676, 141.01959], [43.15685, 141.01432], [43.15415, 141.01723], [43.1555, 141.01301], [43.15241, 141.01719], [43.1541, 141.01097], [43.15188, 141.01552], [43.14976, 141.01619], [43.14337, 141.01178], [43.13965, 141.01486], [43.13282, 141.01152], [43.12855, 141.01317], [43.11686, 141.00907], [43.11299, 141.00931], [43.10907, 141.00523], [43.10461, 141.00484], [43.1029, 141.00247], [43.10045, 141.00179], [43.09961, 140.99703], [43.09601, 140.99266], [43.09259, 140.99508], [43.08935, 140.98993], [43.08673, 140.98959], [43.08657, 140.98331], [43.09195, 140.97577], [43.08772, 140.97278], [43.08888, 140.9714], [43.08834, 140.96748], [43.08957, 140.96241], [43.09012, 140.95208], [43.08768, 140.95518], [43.08575, 140.96618], [43.07518, 140.98549], [43.07181, 140.98875], [43.06785, 140.98989]],
+    3: [[43.06785, 140.98989], [43.07518, 140.98549], [43.08575, 140.96618], [43.08768, 140.95518], [43.09095, 140.95092], [43.08895, 140.92794], [43.08156, 140.9044], [43.07853, 140.88398], [43.06773, 140.88123], [43.06142, 140.87416], [43.05274, 140.85927], [43.0505, 140.84416], [43.0417, 140.85927], [43.03016, 140.86568], [43.01148, 140.86889], [43.00588, 140.88084], [42.98203, 140.87177], [42.96196, 140.87899], [42.94599, 140.84235], [42.94908, 140.83055], [42.94858, 140.8234], [42.93666, 140.81315], [42.93477, 140.8046], [42.93189, 140.80156], [42.93303, 140.77594], [42.90296, 140.77326], [42.90389, 140.75433], [42.88963, 140.7531], [42.8889, 140.73881], [42.886, 140.73495], [42.87852, 140.73318], [42.87067, 140.72499], [42.86384, 140.72434], [42.86393, 140.71096], [42.86054, 140.70664], [42.85433, 140.70126], [42.84289, 140.70727], [42.83749, 140.69882], [42.83598, 140.69984], [42.8331, 140.69101], [42.83629, 140.68662], [42.82887, 140.66558], [42.83417, 140.65412], [42.8396, 140.65054], [42.84205, 140.63888], [42.84536, 140.64528], [42.84908, 140.63399], [42.84782, 140.63008], [42.84577, 140.62781], [42.84661, 140.62305]],
+    4: [[42.84661, 140.62305], [42.84661, 140.62342], [42.84706, 140.6234], [42.84717, 140.62375], [42.84205, 140.63888], [42.84333, 140.64012], [42.84507, 140.64478], [42.84563, 140.64546], [42.84697, 140.64415], [42.84851, 140.64541], [42.84929, 140.6433], [42.85027, 140.64257], [42.85066, 140.64254], [42.85123, 140.64379], [42.85175, 140.64412], [42.85309, 140.64282], [42.85394, 140.64254], [42.8542, 140.64308], [42.85446, 140.64557], [42.85314, 140.64723], [42.85268, 140.64904], [42.85284, 140.65067], [42.85363, 140.65028], [42.85389, 140.65137], [42.85433, 140.65139], [42.85513, 140.65243], [42.85577, 140.652], [42.85692, 140.65243], [42.85844, 140.6546], [42.85867, 140.65543], [42.85909, 140.65509], [42.85931, 140.6556], [42.85965, 140.65552], [42.85969, 140.65928], [42.86034, 140.65944], [42.86129, 140.65847], [42.86244, 140.65814], [42.86208, 140.65917], [42.86301, 140.65865], [42.86311, 140.66013], [42.86419, 140.662], [42.86311, 140.66013], [42.86301, 140.65865], [42.86208, 140.65917], [42.86244, 140.65814], [42.86129, 140.65847], [42.86034, 140.65944], [42.85969, 140.65928], [42.85965, 140.65552], [42.85931, 140.6556], [42.85909, 140.65509], [42.85867, 140.65543], [42.85844, 140.6546], [42.85786, 140.6539], [42.85657, 140.6522], [42.85606, 140.65232], [42.85577, 140.652], [42.85513, 140.65243], [42.85433, 140.65139], [42.85389, 140.65137], [42.85363, 140.65028], [42.85284, 140.65067], [42.85268, 140.64904], [42.85304, 140.64753], [42.85339, 140.6467], [42.85446, 140.64557], [42.8542, 140.64308], [42.85394, 140.64254], [42.85309, 140.64282], [42.85175, 140.64412], [42.85123, 140.64379], [42.85078, 140.64267], [42.85027, 140.64257], [42.84929, 140.6433], [42.84851, 140.64541], [42.84697, 140.64415], [42.84563, 140.64546], [42.84507, 140.64478], [42.84333, 140.64012], [42.84205, 140.63888], [42.84717, 140.62375], [42.84706, 140.6234], [42.84661, 140.62342], [42.84661, 140.62305]],
+    5: [[42.84661, 140.62305], [42.84661, 140.62342], [42.84706, 140.6234], [42.84717, 140.62375], [42.83958, 140.64667], [42.83964, 140.65045], [42.83417, 140.65412], [42.8335, 140.6577], [42.82887, 140.66558], [42.83629, 140.68662], [42.83601, 140.68772], [42.83349, 140.68965], [42.83316, 140.69053], [42.83317, 140.69199], [42.83591, 140.69856], [42.83598, 140.69984], [42.83749, 140.69882], [42.83915, 140.70084], [42.83942, 140.70191], [42.84289, 140.70727], [42.84722, 140.70525], [42.84888, 140.70401], [42.85232, 140.70337], [42.8541, 140.70129], [42.85456, 140.70132], [42.85726, 140.70339], [42.85865, 140.70485], [42.86191, 140.69877], [42.86169, 140.69823]],
+    7: [[42.84661, 140.62305], [42.8396, 140.65054], [42.826, 140.66883], [42.80627, 140.68205], [42.79581, 140.71301], [42.78716, 140.71126], [42.78036, 140.73897], [42.76893, 140.75323], [42.77053, 140.76332], [42.76456, 140.78388], [42.76348, 140.8071], [42.75245, 140.8486], [42.75426, 140.85772], [42.73934, 140.88052], [42.75344, 140.90557], [42.75312, 140.90112], [42.75676, 140.92532], [42.78159, 140.94144], [42.76853, 140.95495], [42.7678, 140.98527], [42.76339, 141.00229], [42.73701, 141.0575], [42.72481, 141.07383], [42.71419, 141.06929], [42.69519, 141.10537], [42.69889, 141.10722], [42.69876, 141.13283], [42.70537, 141.14768], [42.70316, 141.16288], [42.70901, 141.19495], [42.71373, 141.20875], [42.71762, 141.20637], [42.71597, 141.19885], [42.71932, 141.20513], [42.71463, 141.23284], [42.72207, 141.25705], [42.70521, 141.29158], [42.70407, 141.30509], [42.7332, 141.34157], [42.73746, 141.35782], [42.73434, 141.37508], [42.73993, 141.38425], [42.74122, 141.40776], [42.74844, 141.41379], [42.75662, 141.43971], [42.76405, 141.43514], [42.7854, 141.44228], [42.79376, 141.50564], [42.79213, 141.55206], [42.79684, 141.56637], [42.80246, 141.57057], [42.80344, 141.58241], [42.81612, 141.59522], [42.81424, 141.60308], [42.82173, 141.64208], [42.82773, 141.6511], [42.80648, 141.67682], [42.77623, 141.67885], [42.77417, 141.68684], [42.77913, 141.68657]]
+};
+
+/* ============ ACCOMMODATION META (tier + indicative price + notable features) ============ */
+/* Prices are indicative peak-season estimates per room / night (JPY) to gauge relative cost, not quotes. */
+const TIER_COLOR = { "Budget":"#33604F", "Mid":"#3E8FB0", "Premium":"#D97B2E", "Luxury":"#C9A24B" };
+/* onsen: "group-private" (kashikiri — book the whole bath for the group, mixed-gender OK),
+          "in-room" (private onsen in the room), "mixed" (konyoku, mixed-gender open-air),
+          "separated" (public onsen, men's / women's), "none" (public bathhouse nearby) */
+const STAY_META = {
+  // --- OTARU (Day 1) ---
+  "Hotel Nord Otaru":            { tier:"Mid",     price:"¥18–28k", onsen:"none",          features:["Canal-front location","70-dish breakfast buffet","Make-your-own kaisendon","Central Otaru"] },
+  "Dormy Inn Premium Otaru":     { tier:"Mid",     price:"¥12–20k", onsen:"separated",     features:["Natural onsen + sauna","Free late-night ramen","By the station"] },
+  "Hotel Torifito Otaru Canal":  { tier:"Budget",  price:"¥9–15k",  onsen:"none",          features:["Modern & simple","Strong value","Walk to the canal"] },
+  "Otarunai Backpackers Morinoki": { tier:"Budget", price:"¥3.5–6k / bed", onsen:"none",   features:["Cheapest beds in town","Heritage wooden house","Shared kitchen & lounge","10 min to the canal"] },
+  "OMO5 Otaru by Hoshino Resorts": { tier:"Mid",   price:"¥14–22k", onsen:"none",          features:["Stylish heritage bank building","Right by the station","Neighbourhood guide service","Good for a group of 4"] },
+  // --- KIRORO (Day 2) ---
+  "Yu Kiroro":                   { tier:"Luxury",  price:"¥60–120k+ suite", onsen:"separated", features:["Ski-in / ski-out","In-room kitchen","Onsen access","Farm-to-table dining","Roomy suites for 4"] },
+  "Sheraton Hokkaido Kiroro Resort": { tier:"Premium", price:"¥40–70k", onsen:"separated", features:["Full-service","Open-air geothermal baths","Several restaurants","Ski-in / ski-out"] },
+  "Club Med Kiroro Grand":       { tier:"Luxury",  price:"All-inclusive", onsen:"separated", features:["Meals + lift + lessons included","Kids' clubs","Family-friendly"] },
+  "2nd night in Otaru + drive up": { tier:"Budget", price:"from ¥9k", onsen:"none",        features:["Kiroro lodging is all pricey resort","Otaru room + 40 min drive saves most","Good if watching the budget","Trade-off: no slopeside onsen"] },
+  // --- NISEKO (Days 3–6 base) ---
+  "Hotel Kanronomori":           { tier:"Premium", price:"¥25–45k", onsen:"group-private", features:["Kashikiri private onsen (fits 4)","Public bath too","Quiet Moiwa side","Our 4-night base"] },
+  "Niseko Prince Hotel Hirafutei": { tier:"Premium", price:"¥30–55k", onsen:"in-room",     features:["Private bath in every room","Mt. Yotei / slope views","Central Hirafu"] },
+  "Niseko Raku Suisan":          { tier:"Luxury",  price:"¥40–70k", onsen:"in-room",       features:["18 detached villas","Own private bath each","Secluded, ryokan-style"] },
+  "Niseko Grand Hotel":          { tier:"Mid",     price:"¥14–24k", onsen:"mixed",         features:["Rare mixed-gender rotenburo (konyoku)","Also separate men's / women's baths","Konbu Onsen, characterful & dated","Shuttle to the lifts"] },
+  "Black Diamond Lodge":         { tier:"Mid",     price:"¥13–22k", onsen:"separated",     features:["Group-friendly ski lodge","Onsen on site","Home-cooked dinners","Near Annupuri / Moiwa"] },
+  "Owashi Lodge":                { tier:"Budget",  price:"¥8–14k",  onsen:"none",          features:["Long-running budget lodge","Dead-central Hirafu","Ski storage + simple rooms","Great value for the location"] },
+  "The Orchards Niseko":         { tier:"Premium", price:"¥45–80k / chalet", onsen:"none", features:["Self-catered chalets & apartments","Full kitchen — split the cost 4 ways","Space to spread out","Great value per head for a group"] },
+  "Zaborin":                     { tier:"Luxury",  price:"¥150k+ / villa", onsen:"in-room", features:["15 villas, each w/ indoor + outdoor onsen","Ultra-private for a mixed group","Kaiseki dining","The blow-out splurge"] },
+  // --- RUSUTSU (Day 7, optional) ---
+  "Rusutsu Resort Hotel & Convention": { tier:"Premium", price:"¥30–55k", onsen:"separated", features:["Ski-in / ski-out","On-site onsen","Monorail + arcade","Many restaurants"] },
+  "The Westin Rusutsu Resort":   { tier:"Luxury",  price:"¥40–70k", onsen:"separated",     features:["All-suite tower","Wellness focus","Quieter base","Connected to resort"] },
+  "Toyako Onsen ryokan":         { tier:"Mid",     price:"¥15–30k", onsen:"separated",     features:["Lakeside onsen town, ~40 min on","Big rotenburo with Lake Toya views","Cheaper than Niseko/Rusutsu","Scenic detour if extending"] }
+};
+/* Onsen type → how it reads on a card, and whether it works for a mixed-gender group */
+const ONSEN = {
+  "group-private": { label:"Kashikiri — book the whole bath for your group",  short:"Group-private onsen",     good:true  },
+  "in-room":       { label:"Private onsen in your own room",                  short:"In-room private onsen",   good:true  },
+  "mixed":         { label:"Mixed-gender open-air bath (konyoku)",            short:"Mixed-gender rotenburo",  good:true  },
+  "separated":     { label:"Public onsen — separate men's & women's baths",   short:"Public onsen (separated)",good:false },
+  "none":          { label:"No onsen on site — public bathhouse nearby",      short:"No onsen on site",        good:false }
+};
+const DROP = '<svg viewBox="0 0 24 24" fill="currentColor" style="width:11px;height:11px;"><path d="M12 2.5S5.5 10 5.5 14.5a6.5 6.5 0 0 0 13 0C18.5 10 12 2.5 12 2.5z"/></svg>';
+
+/* Confirmed bases we actually sleep at, in order */
+const NIGHTS = [
+  { town:"Otaru",  hotel:"Hotel Nord Otaru", nights:"Night 1", days:"Day 1", accent:"#3E8FB0",
+    note:"Easy coastal first night to shake off the flight before the mountains start." },
+  { town:"Kiroro", hotel:"Yu Kiroro", nights:"Night 2", days:"Day 2", accent:"#33604F",
+    note:"Slopeside at the powder mountain — kitchen in the room, onsen down the hall." },
+  { town:"Niseko", hotel:"Hotel Kanronomori", nights:"Nights 3–6", days:"Days 3–6", accent:"#D97B2E",
+    note:"The heart of the trip: four nights with the kashikiri private onsen booked for the group." },
+  { town:"Rusutsu", hotel:"Rusutsu Resort Hotel & Convention", nights:"Optional +1", days:"Day 7", accent:"#C9A24B", optional:true,
+    note:"Only if we add a night instead of flying out the same evening — see day 7 for the two options." }
+];
+
 /* ============ MAP INIT ============ */
-const map = L.map('map', { scrollWheelZoom:false }).setView([42.95,140.85], 9);
+const map = L.map('map', { scrollWheelZoom:false }).setView([42.9,141.0], 9);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   attribution:'&copy; OpenStreetMap contributors &copy; CARTO',
   subdomains:'abcd', maxZoom:19
 }).addTo(map);
 
-let layerGroup = L.layerGroup().addTo(map);
+/* Two persistent layers: routes (bottom) and markers (top). Never cleared/refit on click. */
+const routeLayer = L.layerGroup().addTo(map);
+const markerLayer = L.layerGroup().addTo(map);
+const routeLines = {};   // day -> polyline
+const dayMarkers = {};   // day -> [markers]
 let activeDay = null;
+let didInitialFit = false;
 
 function makeIcon(type, color, dimmed){
   return L.divIcon({
     className:'',
-    html:`<div style="width:28px;height:28px;border-radius:50%;background:${color};opacity:${dimmed?0.35:1};display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(15,26,46,0.35);color:#fff;border:2px solid #fff;">
-            <div style="width:14px;height:14px;">${ICONS[type]}</div>
+    html:`<div style="width:${dimmed?22:28}px;height:${dimmed?22:28}px;border-radius:50%;background:${color};opacity:${dimmed?0.4:1};display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(15,26,46,${dimmed?0.2:0.4});color:#fff;border:2px solid #fff;transition:all .2s ease;">
+            <div style="width:${dimmed?11:14}px;height:${dimmed?11:14}px;">${ICONS[type]}</div>
           </div>`,
     iconSize:[28,28], iconAnchor:[14,14], popupAnchor:[0,-14]
   });
 }
 
-function allPoints(){
+/* Build every day's route + markers ONCE. */
+function buildMap(){
+  trip.forEach(d => {
+    const color = DAY_COLORS[d.day-1];
+    const geom = ROUTES[d.day];
+    if(geom && geom.length > 1){
+      const line = L.polyline(geom, {
+        color:color, weight:3, opacity:0.55, lineCap:'round', lineJoin:'round'
+      }).addTo(routeLayer);
+      routeLines[d.day] = line;
+    }
+    dayMarkers[d.day] = [];
+    d.stops.forEach(s => {
+      const m = L.marker([s.lat,s.lng], { icon: makeIcon(s.type, color, false) });
+      const meta = STAY_META[s.name];
+      const tierLine = meta ? `<span class="pp-tier">${meta.tier} · ${meta.price}</span>` : '';
+      m.bindPopup(`<b>${s.name}</b><br>Day ${d.day} · ${s.time}<br>${s.note}${tierLine}`);
+      m.on('click', () => selectDay(d.day));
+      m.addTo(markerLayer);
+      dayMarkers[d.day].push({ marker:m, type:s.type });
+    });
+  });
+  map.fitBounds(allBounds(), { padding:[36,36] });
+  didInitialFit = true;
+}
+
+function allBounds(){
   const pts = [];
+  Object.values(ROUTES).forEach(r => r.forEach(p => pts.push(p)));
   trip.forEach(d => d.stops.forEach(s => pts.push([s.lat,s.lng])));
   return pts;
 }
 
-function renderMap(dayNum){
-  layerGroup.clearLayers();
-
+/* Only RESTYLE on selection — no clearing, no refitting, so the map never jumps. */
+function styleMap(dayNum){
   trip.forEach(d => {
-    const isActive = dayNum === null || d.day === dayNum;
     const color = DAY_COLORS[d.day-1];
-    const latlngs = d.stops.map(s => [s.lat,s.lng]);
-
-    if(latlngs.length > 1){
-      L.polyline(latlngs, {
-        color: color,
-        weight: dayNum === null ? 2.5 : (isActive ? 4 : 1.5),
-        opacity: dayNum === null ? 0.75 : (isActive ? 0.95 : 0.15),
-        dashArray: isActive ? null : '2,6'
-      }).addTo(layerGroup);
+    const isActive = dayNum === null || d.day === dayNum;
+    const dimmed = dayNum !== null && !isActive;
+    const line = routeLines[d.day];
+    if(line){
+      line.setStyle({
+        weight: dayNum === null ? 3 : (isActive ? 5.5 : 2),
+        opacity: dayNum === null ? 0.55 : (isActive ? 1 : 0.18),
+        dashArray: isActive ? null : '1,7'
+      });
+      if(isActive && dayNum !== null) line.bringToFront();
     }
-
-    d.stops.forEach(s => {
-      const marker = L.marker([s.lat,s.lng], { icon: makeIcon(s.type, color, !isActive && dayNum !== null) });
-      marker.bindPopup(`<b>${s.name}</b><br>Day ${d.day} · ${s.time}<br>${s.note}`);
-      marker.addTo(layerGroup);
+    (dayMarkers[d.day]||[]).forEach(({marker,type}) => {
+      marker.setIcon(makeIcon(type, color, dimmed));
+      marker.setZIndexOffset(isActive ? 1000 : 0);
     });
   });
-
-  if(dayNum === null){
-    const lastFirst = [];
-    trip.forEach(d => { lastFirst.push([d.stops[0].lat, d.stops[0].lng]); });
-    L.polyline(lastFirst, { color:'#9FB0C9', weight:1, opacity:0.5, dashArray:'1,7' }).addTo(layerGroup);
-  }
-
-  if(dayNum === null){
-    map.fitBounds(allPoints(), { padding:[30,30] });
-  } else {
-    const d = trip.find(x => x.day === dayNum);
-    map.fitBounds(d.stops.map(s => [s.lat,s.lng]), { padding:[60,60], maxZoom:12 });
-  }
 }
 
 /* ============ DETAIL PANEL ============ */
@@ -807,7 +1182,7 @@ function renderDetail(dayNum){
     panel.innerHTML = `
       <div class="detail-eyebrow">Full loop</div>
       <h3>All 7 Days</h3>
-      <div class="detail-narrative">A driving loop from New Chitose Airport through Otaru, Kiroro, and Niseko (Moiwa, Chisenupuri cat-ski, Niseko United), finishing at Rusutsu. Tap any ticket above to zoom into that day's stops, drive time, and the mountain/stay/eat options below.</div>
+      <div class="detail-narrative">A driving loop from New Chitose Airport through Otaru, Kiroro, and Niseko (Moiwa, Annupuri, Niseko United), finishing at Rusutsu. Every day's real driving route is on the map at once — tap a ticket to highlight one day's leg and stops.</div>
     `;
     return;
   }
@@ -836,8 +1211,33 @@ function renderDetail(dayNum){
 const COL_META = {
   mountain: { label:"Mountain", icon: ICONS.ride },
   stay: { label:"Stay", icon: ICONS.stay },
-  eat: { label:"Eat", icon: ICONS.eat }
+  eat: { label:"Eat", icon: ICONS.eat },
+  do: { label:"After riding", icon: ICONS.apres }
 };
+const EATPRICE = {
+  "¥":   "Cheap eats · under ~¥2,000 pp",
+  "¥¥":  "Mid · ~¥2,000–5,000 pp",
+  "¥¥¥": "Splurge · ¥5,000+ pp / tasting menu"
+};
+
+function onsenTag(meta){
+  const o = ONSEN[meta.onsen];
+  if(!o) return '';
+  return `<span class="onsen-tag ${o.good?'onsen-good':'onsen-muted'}" title="${o.label}">${DROP}${o.short}</span>`;
+}
+function stayExtras(name){
+  const meta = STAY_META[name];
+  if(!meta) return '';
+  const tc = TIER_COLOR[meta.tier] || '#3E8FB0';
+  const chips = meta.features.map(f => `<span class="chip" style="--chip-color:${tc}">${f}</span>`).join('');
+  return `
+    <div class="tier-row">
+      <span class="tier" style="--tier-color:${tc}">${meta.tier}</span>
+      <span class="price"><b>${meta.price}</b> / night</span>
+      ${onsenTag(meta)}
+    </div>
+    <div class="chips">${chips}</div>`;
+}
 
 function optionColumn(key, items, color){
   let cards = '';
@@ -845,10 +1245,16 @@ function optionColumn(key, items, color){
     cards = `<div class="option-empty">Nothing scheduled here today.</div>`;
   } else {
     items.forEach(o => {
+      const extras = key === 'stay' ? stayExtras(o.name) : '';
+      const priceBadge = o.price ? `<span class="eat-price" title="${EATPRICE[o.price]||''}">${o.price}</span>` : '';
       cards += `
         <div class="option-card">
-          <span class="option-tag" style="--col-color:${color}">${o.tag}</span>
+          <div class="option-cardhead">
+            <span class="option-tag" style="--col-color:${color}">${o.tag}</span>
+            ${priceBadge}
+          </div>
           <div class="option-name">${o.name}</div>
+          ${extras}
           <div class="option-note">${o.note}</div>
         </div>`;
     });
@@ -882,8 +1288,61 @@ function renderOptions(dayNum){
       ${optionColumn('mountain', d.options.mountain, color)}
       ${optionColumn('stay', d.options.stay, color)}
       ${optionColumn('eat', d.options.eat, color)}
+      ${optionColumn('do', d.options.do, color)}
     </div>
   `;
+}
+
+/* ============ WHERE WE'RE STAYING ============ */
+function renderStays(){
+  const grid = document.getElementById('staysGrid');
+  grid.innerHTML = NIGHTS.map(n => {
+    const meta = STAY_META[n.hotel] || {};
+    const tc = TIER_COLOR[meta.tier] || n.accent;
+    const chips = (meta.features||[]).map(f => `<span class="chip" style="--chip-color:${tc}">${f}</span>`).join('');
+    return `
+      <div class="stay-card${n.optional?' optional':''}" style="--stay-accent:${n.accent}">
+        <div class="stay-nights"><span>${n.days}</span><span class="nt-badge">${n.nights}</span></div>
+        <h3>${n.town}</h3>
+        <div class="stay-place">${n.hotel}</div>
+        <div class="tier-row">
+          <span class="tier" style="--tier-color:${tc}">${meta.tier||''}</span>
+          <span class="price"><b>${meta.price||''}</b> / night</span>
+          ${meta.onsen?onsenTag(meta):''}
+        </div>
+        <div class="chips">${chips}</div>
+        <div class="stay-note">${n.note}</div>
+      </div>`;
+  }).join('');
+  document.getElementById('staysNote').innerHTML =
+    'Prices are indicative peak-season estimates (per room / night, JPY) to compare tiers — confirm real rates and availability when we book. Niseko is the priciest week; Otaru and the budget picks keep the average down. More budget and onsen options for each stop are in the day-by-day section above.';
+  renderOnsenGuide();
+}
+
+/* Short explainer so a mixed-gender group knows which baths work for them */
+function renderOnsenGuide(){
+  const el = document.getElementById('onsenGuide');
+  if(!el) return;
+  const items = [
+    ["group-private","The whole bath is reserved for just your group — the simplest way for a mixed-gender group to soak together."],
+    ["in-room","Your room has its own onsen — total privacy, no scheduling."],
+    ["mixed","A traditional konyoku bath everyone shares — increasingly rare, so worth grabbing when you find one."],
+    ["separated","Standard setup: split into men's and women's baths (usually nude). The group splits up to bathe."]
+  ];
+  el.innerHTML = `
+    <div class="onsen-callout">
+      <div class="onsen-callout-head">${DROP}<span>Onsen, for a group of friends</span></div>
+      <div class="onsen-callout-grid">
+        ${items.map(([k,desc]) => {
+          const o = ONSEN[k];
+          return `<div class="onsen-line">
+            <span class="onsen-tag ${o.good?'onsen-good':'onsen-muted'}">${DROP}${o.short}</span>
+            <span class="onsen-desc">${desc}</span>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="onsen-foot">Most Japanese onsens are gender-separated and nude — no swimwear. Small tattoos are increasingly OK, but a private (kashikiri) or in-room bath sidesteps any tattoo rules too.</div>
+    </div>`;
 }
 
 /* ============ TICKET NAV ============ */
@@ -913,9 +1372,19 @@ function selectDay(dayNum){
     t.classList.toggle('active', parseInt(t.dataset.day) === dayNum);
   });
   document.getElementById('resetBtn').classList.toggle('active', dayNum === null);
-  renderMap(dayNum);
+  styleMap(dayNum);               // restyle only — map view stays put
   renderDetail(dayNum);
   renderOptions(dayNum);
+  const hint = document.getElementById('hintText');
+  const dot = document.getElementById('hintDot');
+  if(dayNum === null){
+    hint.innerHTML = 'Showing all 7 days — tap a ticket to highlight one.';
+    dot.style.background = 'var(--ice)';
+  } else {
+    const d = trip.find(x => x.day === dayNum);
+    hint.innerHTML = `Highlighting <b>Day 0${d.day} · ${d.title}</b> — other days stay on the map, dimmed.`;
+    dot.style.background = DAY_COLORS[dayNum-1];
+  }
 }
 
 /* ============ ROUTE SHEET ============ */
@@ -938,9 +1407,50 @@ function renderSheet(){
   });
 }
 
+/* ============ SHARE: PRINT + COPY ============ */
+function buildPlainSummary(){
+  let out = 'HOKKAIDO POWDER LOOP — 7-DAY SNOWBOARD TRIP\n';
+  out += 'Chitose ▸ Otaru ▸ Kiroro ▸ Niseko ▸ Rusutsu ▸ Chitose\n\n';
+  trip.forEach(d => {
+    out += `DAY ${d.day} — ${d.title}\n`;
+    out += `  Drive: ${d.drive}\n`;
+    d.stops.forEach(s => { out += `  • ${s.name} (${s.time})\n`; });
+    out += '\n';
+  });
+  out += 'WHERE WE SLEEP:\n';
+  NIGHTS.filter(n=>!n.optional).forEach(n => {
+    const m = STAY_META[n.hotel] || {};
+    out += `  ${n.nights} — ${n.town}: ${n.hotel} [${m.tier||''} ~${m.price||''}/nt]\n`;
+  });
+  out += '\n(Prices are indicative peak-season estimates, not quotes.)';
+  return out;
+}
+function initShare(){
+  document.getElementById('printBtn').addEventListener('click', () => window.print());
+  const copyBtn = document.getElementById('copyBtn');
+  copyBtn.addEventListener('click', async () => {
+    const text = buildPlainSummary();
+    const label = copyBtn.querySelector('svg').outerHTML;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch(e){
+      const ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch(_){}
+      document.body.removeChild(ta);
+    }
+    copyBtn.classList.add('copied');
+    copyBtn.innerHTML = label + ' Copied!';
+    setTimeout(() => { copyBtn.classList.remove('copied'); copyBtn.innerHTML = label + ' Copy plan for chat'; }, 1800);
+  });
+}
+
 /* ============ INIT ============ */
 renderNav();
+renderStays();
 renderSheet();
+buildMap();
+initShare();
 selectDay(1);
 </script>
 </body>
